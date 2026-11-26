@@ -9,6 +9,7 @@ const prisma = require("../config/database");
 const { erros } = require("../utils/erros");
 const { normalizarTelefone, formatarTelefone, gerarNumero, lista } = require("../utils/formatos");
 const { encomendaParaApi } = require("../utils/mapeadores");
+const descontos = require("./descontoService");
 
 const INCLUIR = { itens: true, historico: true };
 
@@ -63,7 +64,10 @@ async function criarDoCheckout(dados) {
     };
   });
 
-  const total = itens.reduce((s, i) => s + i.subtotal, 0);
+  const subtotal = itens.reduce((s, i) => s + i.subtotal, 0);
+  // Código de desconto: validado e calculado de novo aqui
+  const cupao = dados.codigo ? await descontos.calcular(dados.codigo, subtotal) : null;
+  const total = subtotal - (cupao ? cupao.desconto : 0);
   const numero = await numeroUnico();
 
   const encomenda = await prisma.encomenda.create({
@@ -79,6 +83,8 @@ async function criarDoCheckout(dados) {
       observacoes: c.observacoes || null,
       pagamento: dados.pagamento,
       total,
+      desconto: cupao ? cupao.desconto : null,
+      codigoDesconto: cupao ? cupao.codigo : null,
       taxaEntrega: zona && zona.taxa != null ? zona.taxa : null,
       itens: { create: itens },
       historico: { create: [{ estado: "Recebida", nota: "Encomenda feita no site" }] }

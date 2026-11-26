@@ -31,4 +31,10 @@ function lista(texto) {
   }
 }
 
-module.exports = { normalizarTelefone, formatarTelefone, gerarNumero, lista };
+/** 1850 → "1.850,00 MT" (o mesmo formato da loja) */
+function formatarPreco(valor) {
+  const [inteiro, decimal] = Number(valor || 0).toFixed(2).split(".");
+  return inteiro.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "," + decimal + " MT";
+}
+
+module.exports = { normalizarTelefone, formatarTelefone, gerarNumero, lista, formatarPreco };

@@ -90,6 +90,8 @@ function encomendaParaApi(e, { publico = false } = {}) {
       subtotal: i.subtotal
     })),
     total: e.total,
+    desconto: e.desconto || 0,
+    codigoDesconto: e.codigoDesconto || "",
     taxaEntrega: e.taxaEntrega,
     pedidoFornecedor: e.pedidoFornecedor,
     notas: e.notas || "",

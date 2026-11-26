@@ -81,7 +81,9 @@ model Encomenda {
   endereco         String
   observacoes      String?
   pagamento        String
-  total            Int
+  total            Int // produtos, já com o desconto aplicado
+  desconto         Int?
+  codigoDesconto   String?
   taxaEntrega      Int?
   pedidoFornecedor Boolean           @default(false)
   notas            String?

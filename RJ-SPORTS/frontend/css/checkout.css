@@ -280,6 +280,109 @@
   text-underline-offset: 3px;
 }
 
+/* ---------- Código de desconto (no resumo) ---------- */
+.cupao {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.cupao label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.cupao__linha {
+  display: flex;
+  gap: 8px;
+}
+
+.cupao__linha input {
+  flex: 1;
+  min-width: 0;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: #fff;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: border-color var(--transicao);
+}
+
+.cupao__linha input::placeholder {
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.cupao__linha input:focus {
+  outline: none;
+  border-color: var(--cor-escuro);
+}
+
+.cupao__linha input[aria-invalid="true"] {
+  border-color: #d0021b;
+}
+
+.cupao__linha .btn {
+  min-height: 46px;
+  padding: 0 18px;
+  background: #fff;
+}
+
+.cupao__linha .btn:hover {
+  background: var(--cor-escuro);
+}
+
+.cupao__erro {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #d0021b;
+}
+
+.cupao--aplicado {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.cupao__etiqueta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: var(--cor-sucesso);
+}
+
+.cupao__etiqueta svg {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+}
+
+.cupao__etiqueta strong {
+  letter-spacing: 0.04em;
+}
+
+.cupao__remover {
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.resumo__linha--desconto span {
+  color: var(--cor-sucesso);
+}
+
 /* ---------- Confirmação ---------- */
 .confirmacao {
   max-width: 640px;

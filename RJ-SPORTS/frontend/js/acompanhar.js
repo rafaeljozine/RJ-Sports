@@ -132,6 +132,7 @@
       "    <div>" +
       "      <h3>Artigos</h3>" +
       '      <div class="resultado__artigos">' + artigos + "</div>" +
+      (enc.desconto ? '      <div class="resultado__total resultado__total--desconto"><span>Desconto (' + e(enc.codigoDesconto || "código") + ")</span><span>− " + RJS.formatarPreco(enc.desconto) + "</span></div>" : "") +
       '      <div class="resultado__total"><span>Total (+ entrega)</span><span>' + RJS.formatarPreco(enc.total) + "</span></div>" +
       "    </div>" +
       "    <div>" +

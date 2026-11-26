@@ -95,6 +95,8 @@ async function importar(copia) {
           observacoes: c.observacoes || null,
           pagamento: e.pagamento || "Numerário",
           total: num(e.total) || 0,
+          desconto: num(e.desconto) || null,
+          codigoDesconto: e.codigoDesconto || null,
           taxaEntrega: num(e.taxaEntrega),
           pedidoFornecedor: !!e.pedidoFornecedor,
           notas: e.notas || null,

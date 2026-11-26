@@ -41,7 +41,9 @@
         return "Olá " + primeiro + ". A sua encomenda " + enc.numero + " na RJ Sports foi cancelada. Se precisar de ajuda, fale connosco.";
       default:
         return "Olá " + primeiro + "! Somos a RJ Sports. Recebemos a sua encomenda " + enc.numero + ":\n" + artigos +
-          "\n\nProdutos: " + RJSA.preco(enc.total) + "\nEntrega: " + taxa + "\nTotal a pagar na entrega: " + totalFinal +
+          "\n\nProdutos: " + RJSA.preco(enc.total) +
+          (enc.desconto ? " (já com o desconto " + enc.codigoDesconto + " de " + RJSA.preco(enc.desconto) + ")" : "") +
+          "\nEntrega: " + taxa + "\nTotal a pagar na entrega: " + totalFinal +
           "\nPagamento: " + enc.pagamento + "\n\nPodemos confirmar a encomenda?";
     }
   }
@@ -248,7 +250,10 @@
         '<div class="tabela-caixa"><table class="tabela"><thead><tr><th>Produto</th><th class="num">Qtd</th><th class="num">Preço</th><th class="num">Custo</th><th class="num">Subtotal</th></tr></thead>' +
         "<tbody>" + itens + "</tbody></table></div>" +
         '<div class="cartao__corpo" style="border-top:1px solid var(--admin-borda)">' +
-        '<div class="linha-total"><span>Produtos</span><span>' + RJSA.preco(enc.total) + "</span></div>" +
+        (enc.desconto
+          ? '<div class="linha-total"><span>Produtos</span><span>' + RJSA.preco(enc.total + enc.desconto) + "</span></div>" +
+            '<div class="linha-total" style="color:var(--estado-entregue)"><span>Desconto (' + e(enc.codigoDesconto || "código") + ")</span><span>− " + RJSA.preco(enc.desconto) + "</span></div>"
+          : '<div class="linha-total"><span>Produtos</span><span>' + RJSA.preco(enc.total) + "</span></div>") +
         '<div class="linha-total" style="align-items:center"><label for="taxa">Taxa de entrega</label>' +
         '<span class="campo-prefixo nao-imprimir" style="width:150px"><input id="taxa" type="number" min="0" step="10" value="' + (enc.taxaEntrega == null ? "" : enc.taxaEntrega) + '" placeholder="A definir" style="width:100%;min-height:36px;padding:0 40px 0 10px;border:1px solid var(--admin-borda);border-radius:6px;text-align:right"><span>MT</span></span></div>' +
         '<div class="linha-total linha-total--grande"><span>Total a cobrar na entrega</span><span>' + RJSA.preco(enc.total + taxa) + "</span></div>" +

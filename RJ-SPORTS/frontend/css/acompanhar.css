@@ -294,6 +294,16 @@
   font-weight: 700;
 }
 
+.resultado__total--desconto {
+  color: var(--cor-sucesso);
+  font-weight: 600;
+}
+
+.resultado__total--desconto + .resultado__total {
+  margin-top: 0;
+  border-top: 0;
+}
+
 .resultado__entrega {
   font-size: 0.9375rem;
   line-height: 1.6;

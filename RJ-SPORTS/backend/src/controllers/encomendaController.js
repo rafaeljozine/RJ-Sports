@@ -4,11 +4,16 @@
 
 const { assincrono } = require("../utils/erros");
 const servico = require("../services/encomendaService");
+const descontos = require("../services/descontoService");
 
 /* ---------- Loja (público) ---------- */
 exports.criar = assincrono(async (req, res) => {
   const encomenda = await servico.criarDoCheckout(req.body);
   res.status(201).json(encomenda);
+});
+
+exports.validarDesconto = assincrono(async (req, res) => {
+  res.json(await descontos.calcular(req.body.codigo, req.body.subtotal));
 });
 
 exports.consultar = assincrono(async (req, res) => {

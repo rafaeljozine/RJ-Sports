@@ -30,11 +30,18 @@ const checkout = z.object({
     observacoes: textoOpcional(500)
   }),
   pagamento: z.enum(PAGAMENTOS),
+  codigo: textoOpcional(30),
   itens: z.array(z.object({
     id: idTexto,
     tamanho: textoOpcional(10),
     quantidade: z.number().int().min(1).max(20)
   })).min(1, "O carrinho está vazio.").max(30)
+});
+
+// Pré-visualização do código no checkout (o valor final é recalculado na encomenda)
+const validarDesconto = z.object({
+  codigo: texto(30).min(1, "Escreva o código."),
+  subtotal: inteiro
 });
 
 /* ---------- Autenticação ---------- */
@@ -143,6 +150,6 @@ const loja = z.object({
 
 module.exports = {
   ESTADOS, PAGAMENTOS, PROVINCIAS,
-  checkout, login, conta, palavraPasse,
+  checkout, validarDesconto, login, conta, palavraPasse,
   produto, categoria, fornecedor, zona, campanha, despesa, atualizarEncomenda, loja
 };

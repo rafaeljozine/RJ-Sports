@@ -33,7 +33,7 @@
       return '<div class="alerta alerta--info">' + ic.info +
         "<div><strong>Promoções e códigos</strong>Para pôr um produto em promoção na loja, edite-o e preencha o “Preço antigo” — há " +
         produtosPromo + ' produto(s) em promoção agora (<a href="produtos.html">ver produtos</a>). ' +
-        "Os códigos de desconto aqui ficam registados para os divulgar e aplicar na confirmação por telefone; o campo de código no checkout entra numa próxima fase.</div></div>";
+        "Os clientes escrevem o código no checkout: o desconto só é aceite com a campanha ligada, dentro das datas e acima da compra mínima, e fica registado na encomenda.</div></div>";
     },
     campos: [
       { id: "nome", rotulo: "Nome da campanha", obrigatorio: true, inteiro: true, placeholder: "Ex.: Regresso às aulas" },

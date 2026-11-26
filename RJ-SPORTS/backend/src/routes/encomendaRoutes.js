@@ -1,6 +1,7 @@
 /* ==========================================================
    Encomendas
    Loja:   POST /api/encomendas            (checkout)
+           POST /api/descontos/validar     (código de desconto)
            GET  /api/encomendas/:numero?telefone=…  (acompanhar)
    Painel: GET /api/admin/encomendas · PUT/DELETE /api/admin/encomendas/:numero
    ========================================================== */
@@ -21,6 +22,7 @@ const limite = (maximo, minutos) => rateLimit({
 });
 
 router.post("/encomendas", limite(10, 15), validar(v.checkout), c.criar);
+router.post("/descontos/validar", limite(20, 15), validar(v.validarDesconto), c.validarDesconto);
 router.get("/encomendas/:numero", limite(30, 15), c.consultar);
 
 router.get("/admin/encomendas", exigirAdmin, c.listar);

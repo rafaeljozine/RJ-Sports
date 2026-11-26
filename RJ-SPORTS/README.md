@@ -38,6 +38,7 @@ O site também abre só com os ficheiros (por exemplo, `python -m http.server` n
 
 - **Catálogo** — a loja carrega `/api/catalogo.js` antes do resto; só vão para o site os produtos visíveis, sem custos nem fornecedores.
 - **Encomendas** — o checkout envia para `POST /api/encomendas`. O servidor **recalcula os preços** a partir da base de dados (o navegador não consegue alterá-los), valida o telefone de Moçambique e o tamanho, aplica a taxa da zona e devolve o número `RJS-123456`. O cliente envia ainda a encomenda pelo WhatsApp.
+- **Códigos de desconto** — o cliente escreve o código no resumo do checkout (`POST /api/descontos/validar` mostra o desconto). Ao registar a encomenda, o servidor volta a validar a campanha (ligada, dentro das datas, acima da compra mínima) e grava o desconto e o código; o `total` da encomenda já vem com o desconto.
 - **Acompanhar** — `GET /api/encomendas/:numero?telefone=…` só responde se o telefone coincidir.
 - **Painel** — login com cookie de sessão `httpOnly`/`SameSite=Strict` (JWT) e palavra-passe com bcrypt. As páginas recebem os dados de `/api/admin/dados.js` e cada gravação envia ao servidor só o que mudou.
 - **Fotos** — enviadas no painel para `backend/uploads` (JPEG, PNG ou WebP, até 3 MB).
@@ -51,7 +52,8 @@ Cabeçalhos de segurança (Helmet, com Content-Security-Policy), limite de tenta
 | Método | Endereço | Para quê |
 |---|---|---|
 | GET | `/api/catalogo` · `/api/produtos` · `/api/categorias` · `/api/zonas` | Dados públicos da loja |
-| POST | `/api/encomendas` | Checkout |
+| POST | `/api/encomendas` | Checkout (aceita `codigo` de desconto) |
+| POST | `/api/descontos/validar` | Pré-visualizar um código de desconto |
 | GET | `/api/encomendas/:numero?telefone=` | Acompanhar encomenda |
 | POST | `/api/auth/entrar` · `/api/auth/sair` | Login do painel |
 | GET · PUT | `/api/auth/eu` · `/api/auth/conta` · `/api/auth/palavra-passe` | Conta |
@@ -158,6 +160,5 @@ Para crescer (vários servidores, muito tráfego), mude `provider = "sqlite"` pa
 
 ## Ainda por fazer
 
-- Campo de código de desconto no checkout (as campanhas já existem no painel).
 - Envio automático de avisos (SMS / WhatsApp) quando o estado da encomenda muda.
 - Fotos reais dos produtos (as atuais são do Unsplash, só para ilustrar).
