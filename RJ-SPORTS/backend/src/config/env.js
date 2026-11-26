@@ -19,6 +19,8 @@ const env = {
   vercel: !!process.env.VERCEL,
   // fotos no Vercel Blob (vazio = pasta uploads)
   blobToken: process.env.BLOB_READ_WRITE_TOKEN || "",
+  // tipo do armazenamento Blob: "private" (fotos servidas por /api/fotos) ou "public"
+  blobAcesso: process.env.BLOB_ACESSO === "public" ? "public" : "private",
   // outros endereços do site que podem enviar pedidos à API
   // (ex.: o endereço .vercel.app depois de ligar um domínio próprio)
   origensExtra: (process.env.ORIGENS_PERMITIDAS || "").split(",").map((o) => o.trim().replace(/\/+$/, "")).filter(Boolean),

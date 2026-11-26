@@ -33,16 +33,19 @@ exports.guardarLoja = assincrono(async (req, res) => {
 exports.upload = assincrono(async (req, res) => {
   if (!req.file) throw erros.pedidoInvalido("Nenhuma foto recebida.");
 
-  // Vercel: a foto vai para o Vercel Blob e fica com um endereço https://…
+  // Vercel: a foto vai para o Vercel Blob.
+  // - armazenamento privado: a loja mostra-a por /api/fotos/… (ver fotoController)
+  // - armazenamento público: fica com o endereço https://… do próprio Blob
   if (env.blobToken) {
     const { put } = require("@vercel/blob");
     const foto = await put("produtos/" + nomeAleatorio(req.file.mimetype), req.file.buffer, {
-      access: "public",
+      access: env.blobAcesso,
       contentType: req.file.mimetype,
       cacheControlMaxAge: 30 * 24 * 3600,
       token: env.blobToken
     });
-    return res.status(201).json({ url: foto.url });
+    const url = env.blobAcesso === "private" ? "/api/fotos/" + foto.pathname : foto.url;
+    return res.status(201).json({ url });
   }
 
   res.status(201).json({ url: "/uploads/" + req.file.filename });

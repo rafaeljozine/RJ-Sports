@@ -8,6 +8,8 @@ const loja = require("../controllers/lojaController");
 router.get("/saude", loja.saude);
 router.get("/catalogo", loja.catalogo);
 router.get("/catalogo.js", loja.catalogoScript);
+// fotos de um Vercel Blob privado: /api/fotos/produtos/<nome>.jpg
+router.get(/^\/fotos\/(.+)$/, require("../controllers/fotoController").servir);
 
 router.use(require("./authRoutes"));
 router.use(require("./produtoRoutes"));

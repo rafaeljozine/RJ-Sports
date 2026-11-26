@@ -12,7 +12,7 @@ RJ-SPORTS/
 
 ## Arrancar o projeto
 
-Precisa do **Node.js 18 ou mais recente** e de um **PostgreSQL** neste computador, com uma base de dados vazia chamada `rjsports`.
+Precisa do **Node.js 20 ou mais recente** e de um **PostgreSQL** neste computador, com uma base de dados vazia chamada `rjsports`.
 
 ```powershell
 cd RJ-SPORTS/backend
@@ -45,7 +45,7 @@ O site também abre só com os ficheiros (por exemplo, `python -m http.server` n
 - **Códigos de desconto** — o cliente escreve o código no resumo do checkout (`POST /api/descontos/validar` mostra o desconto). Ao registar a encomenda, o servidor volta a validar a campanha (ligada, dentro das datas, acima da compra mínima) e grava o desconto e o código; o `total` da encomenda já vem com o desconto.
 - **Acompanhar** — `GET /api/encomendas/:numero?telefone=…` só responde se o telefone coincidir.
 - **Painel** — login com cookie de sessão `httpOnly`/`SameSite=Strict` (JWT) e palavra-passe com bcrypt. As páginas recebem os dados de `/api/admin/dados.js` e cada gravação envia ao servidor só o que mudou.
-- **Fotos** — enviadas no painel (JPEG, PNG ou WebP, até 3 MB). No Vercel ficam no **Vercel Blob**; em localhost e no Docker, na pasta `backend/uploads`.
+- **Fotos** — enviadas no painel (JPEG, PNG ou WebP, até 3 MB). No Vercel ficam num **Vercel Blob privado** e a loja mostra-as em `/api/fotos/…` (com cache de 30 dias na rede do Vercel); em localhost e no Docker, na pasta `backend/uploads`.
 
 ### Segurança incluída
 
@@ -98,7 +98,7 @@ Para uma loja deste tamanho, os planos gratuitos chegam para começar.
 ### 2. Base de dados e fotos (separador *Storage* do projeto)
 
 1. **Create Database → Neon** (Postgres), região **Frankfurt** (a mais próxima de Moçambique) → ligar ao projeto. São criadas as variáveis `DATABASE_URL` e `DATABASE_URL_UNPOOLED`.
-2. **Create → Blob** → ligar ao projeto. É criada a variável `BLOB_READ_WRITE_TOKEN`.
+2. **Create → Blob** → ligar ao projeto. É criada a variável `BLOB_READ_WRITE_TOKEN`. O armazenamento pode ser *Private* (o normal). Se o criar *Public*, defina também `BLOB_ACESSO=public`.
 
 ### 3. Variáveis (*Settings → Environment Variables*)
 
