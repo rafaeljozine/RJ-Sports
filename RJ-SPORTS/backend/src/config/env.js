@@ -13,6 +13,11 @@ const env = {
   porta: Number(process.env.PORT) || 3000,
   // endereço público da loja (ex.: https://www.rjsports.co.mz) — usado no sitemap
   urlSite: (process.env.SITE_URL || "").replace(/\/+$/, ""),
+  // outros endereços do site que podem enviar pedidos à API
+  // (ex.: o domínio .vercel.app quando o site está no Vercel)
+  origensExtra: (process.env.ORIGENS_PERMITIDAS || "").split(",").map((o) => o.trim().replace(/\/+$/, "")).filter(Boolean),
+  // quantos proxies há à frente do servidor (Caddy = 1; Vercel + Railway = 2)
+  proxies: process.env.TRUST_PROXY != null && process.env.TRUST_PROXY !== "" ? Number(process.env.TRUST_PROXY) : 1,
   jwtSegredo: process.env.JWT_SECRET || "",
   sessaoHoras: Number(process.env.SESSAO_HORAS) || 8,
   uploadMaxMb: Number(process.env.UPLOAD_MAX_MB) || 3,

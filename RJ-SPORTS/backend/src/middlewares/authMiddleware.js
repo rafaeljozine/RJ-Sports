@@ -50,18 +50,30 @@ async function exigirAdmin(req, res, next) {
   next();
 }
 
+/** Endereços do próprio site (SITE_URL e ORIGENS_PERMITIDAS) */
+const anfitrioesSite = new Set(
+  [env.urlSite, ...env.origensExtra]
+    .map((u) => { try { return new URL(u).host; } catch (e) { return null; } })
+    .filter(Boolean)
+);
+
 /**
  * Proteção extra contra pedidos de outros sites (CSRF):
- * pedidos que alteram dados têm de vir do próprio site.
+ * pedidos que alteram dados têm de vir do próprio site — o mesmo
+ * servidor ou o endereço público da loja (ex.: site no Vercel que
+ * reencaminha /api para este servidor).
  */
 function mesmoSite(req, res, next) {
   if (["GET", "HEAD", "OPTIONS"].includes(req.method)) return next();
   const origem = req.get("origin");
   if (origem) {
-    const anfitriao = req.get("host");
+    let host;
     try {
-      if (new URL(origem).host !== anfitriao) return next(erros.proibido("Pedido de origem não permitida."));
+      host = new URL(origem).host;
     } catch (e) {
+      return next(erros.proibido("Pedido de origem não permitida."));
+    }
+    if (host !== req.get("host") && !anfitrioesSite.has(host)) {
       return next(erros.proibido("Pedido de origem não permitida."));
     }
   }

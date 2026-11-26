@@ -19,7 +19,7 @@ const { rotaNaoEncontrada, tratarErros } = require("./middlewares/errorMiddlewar
 const app = express();
 
 app.disable("x-powered-by");
-app.set("trust proxy", 1); // atrás do Caddy/Nginx: IP real do cliente e HTTPS corretos
+app.set("trust proxy", env.proxies); // atrás do Caddy (1) ou do Vercel + Railway (2): IP real do cliente e HTTPS corretos
 
 /* ---------- Segurança dos cabeçalhos ---------- */
 app.use(helmet({

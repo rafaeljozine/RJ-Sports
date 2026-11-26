@@ -15,4 +15,6 @@ exports.catalogo = assincrono(async (req, res) => {
   res.json(await lojaService.catalogoPublico());
 });
 
-exports.saude = (req, res) => res.json({ ok: true, hora: new Date().toISOString() });
+// "ip" é o endereço de quem pergunta, tal como o servidor o vê:
+// serve para confirmar o TRUST_PROXY (tem de ser o IP do visitante)
+exports.saude = (req, res) => res.json({ ok: true, hora: new Date().toISOString(), ip: req.ip });

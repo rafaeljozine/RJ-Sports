@@ -75,6 +75,62 @@ Cabeçalhos de segurança (Helmet, com Content-Security-Policy), limite de tenta
 | `npm run backup` | Cópia de segurança (base de dados + fotos) em `backend/backups` |
 | `npm run db:studio` | Abre o Prisma Studio para ver a base de dados |
 
+## Pôr online: Vercel (site) + Railway (servidor)
+
+O **Vercel** serve as páginas da loja e do painel. O **Railway** corre o servidor (API, base de dados SQLite e fotos num disco permanente). O Vercel reencaminha `/api`, `/uploads`, `/robots.txt` e `/sitemap.xml` para o Railway (`frontend/vercel.json`). Para o navegador é um único site, por isso o login do painel e as proteções funcionam como em localhost.
+
+Escolha já o nome do projeto no Vercel (ex.: `rj-sports` → `https://rj-sports.vercel.app`): é preciso no passo 3.
+
+### 1. Railway — criar o servidor
+
+1. Em [railway.com](https://railway.com): **New Project → Deploy from GitHub repo** e escolha o repositório da loja.
+2. No serviço criado: **Settings → Source → Root Directory** = `RJ-SPORTS`. O Railway lê o `railway.json` e constrói o `Dockerfile`.
+3. **Attach Volume** (clique direito no serviço) com o caminho **`/dados`**. Sem isto, as encomendas e as fotos perdem-se a cada atualização.
+
+### 2. Railway — variáveis (separador *Variables*)
+
+| Variável | Valor |
+|---|---|
+| `SITE_URL` | `https://rj-sports.vercel.app` (o endereço do Vercel) |
+| `TRUST_PROXY` | `2` (Vercel + Railway à frente do servidor) |
+| `JWT_SECRET` | texto aleatório com 48+ caracteres |
+| `ADMIN_EMAIL` · `ADMIN_PASSWORD` | primeira conta do painel (palavra-passe com 12+ caracteres) |
+| `ADMIN_NOME` | opcional |
+
+Depois: **Settings → Networking → Generate Domain**. Fica um endereço como `rj-sports-production.up.railway.app`. Confirme que `https://ESSE-ENDERECO/api/saude` responde `"ok":true`.
+
+### 3. Ligar o site ao servidor
+
+Em `frontend/vercel.json`, troque as 4 ocorrências de `ENDERECO-DO-RAILWAY.up.railway.app` pelo endereço do passo anterior. Depois faça commit e push.
+
+### 4. Vercel — publicar o site
+
+1. Em [vercel.com](https://vercel.com): **Add New → Project** e importe o mesmo repositório.
+2. **Project Name** = o nome escolhido (ex.: `rj-sports`). **Root Directory** = `RJ-SPORTS/frontend`. **Framework Preset** = *Other*, sem comando de build.
+3. **Deploy**.
+
+### 5. Verificar
+
+- Abra `https://rj-sports.vercel.app/api/saude`. O campo `"ip"` tem de ser **o seu IP** (compare com um site "qual é o meu IP"). Se aparecer outro, mude `TRUST_PROXY` no Railway para `3` (ou `1`) até coincidir. Assim, o limite de tentativas conta cada visitante em separado.
+- Entre em `https://rj-sports.vercel.app/admin/login.html` e **mude a palavra-passe**.
+- Faça uma encomenda de teste e apague-a depois no painel.
+
+### Domínio próprio (ex.: `rjsports.co.mz`)
+
+Acrescente o domínio no Vercel (**Settings → Domains**) e siga as instruções de DNS. No Railway, mude `SITE_URL` para `https://www.rjsports.co.mz` e ponha o endereço antigo em `ORIGENS_PERMITIDAS=https://rj-sports.vercel.app` (pode ter vários, separados por vírgulas).
+
+### Atualizar
+
+Cada `git push` para o GitHub publica sozinho nos dois serviços. As migrações novas da base de dados são aplicadas ao arrancar.
+
+### Cópias de segurança
+
+No Railway não há `crontab`:
+- descarregue a cópia em **Painel → Configurações → Descarregar cópia de segurança** (por exemplo, uma vez por semana);
+- ative as cópias automáticas do volume no Railway (separador **Backups** do volume), se o seu plano as incluir.
+
+Para **repor** uma cópia grande, entre no painel pelo endereço do Railway (`https://…up.railway.app/admin/login.html`): o Vercel limita o tamanho dos pedidos.
+
 ## Pôr online (servidor VPS com Docker)
 
 É a forma mais simples e barata: um servidor virtual Linux (Ubuntu 22.04 ou 24.04, 1 GB de RAM chega para começar) com Docker. O **Caddy** trata do **HTTPS automaticamente** (certificado gratuito, renovado sozinho) e a base de dados **SQLite** fica num volume do Docker, com cópias diárias.
