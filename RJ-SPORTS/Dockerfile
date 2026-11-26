@@ -1,8 +1,8 @@
 # ==========================================================
 # RJ SPORTS — imagem de produção (site + API num só serviço)
 # Construir:  docker compose build
-# Os dados (base de dados, fotos, cópias) ficam em /dados,
-# num volume (Docker Compose ou Railway) — não se perdem ao
+# A base de dados é PostgreSQL (serviço "db" do docker-compose).
+# Fotos e cópias ficam em /dados, num volume — não se perdem ao
 # atualizar a imagem.
 # ==========================================================
 
@@ -33,15 +33,13 @@ RUN chmod +x /usr/local/bin/entrypoint.sh \
 
 ENV NODE_ENV=production \
     PORT=3000 \
-    DATABASE_URL=file:/dados/rjsports.db \
     UPLOADS_DIR=/dados/uploads \
     BACKUP_DIR=/dados/backups \
     FRONTEND_DIR=/app/frontend
 
-# O arranque acerta as permissões de /dados (o Railway monta o volume
-# como administrador) e depois corre o servidor como o utilizador "node",
-# sem privilégios. Não se usa VOLUME aqui: o Railway não o permite e o
-# docker-compose.yml já define o volume.
+# O arranque acerta as permissões de /dados e depois corre o servidor
+# como o utilizador "node", sem privilégios. O volume é definido no
+# docker-compose.yml.
 EXPOSE 3000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \

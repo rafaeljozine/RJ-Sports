@@ -6,14 +6,35 @@
 # ==========================================================
 
 services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: rjsports
+      POSTGRES_USER: rjsports
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no .env.producao}
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rjsports -d rjsports"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   loja:
     build: .
     restart: unless-stopped
     env_file: .env.producao
+    environment:
+      DATABASE_URL: postgresql://rjsports:${POSTGRES_PASSWORD}@db:5432/rjsports
+      DATABASE_URL_UNPOOLED: postgresql://rjsports:${POSTGRES_PASSWORD}@db:5432/rjsports
     volumes:
-      - dados:/dados # base de dados, fotos e cópias de segurança
+      - dados:/dados # fotos e cópias de segurança
     expose:
       - "3000"
+    depends_on:
+      db:
+        condition: service_healthy
 
   caddy:
     image: caddy:2.8-alpine
@@ -31,6 +52,7 @@ services:
       - loja
 
 volumes:
+  postgres:
   dados:
   caddy_dados:
   caddy_config:

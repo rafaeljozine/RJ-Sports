@@ -1,6 +1,9 @@
 /* ==========================================================
-   Envio de fotos de produtos (para a pasta backend/uploads)
-   Só imagens JPEG, PNG ou WebP. Nome de ficheiro aleatório.
+   Envio de fotos de produtos
+   Só imagens JPEG, PNG ou WebP, com nome de ficheiro aleatório.
+   - Com BLOB_READ_WRITE_TOKEN (Vercel): a foto fica em memória e
+     o controller envia-a para o Vercel Blob.
+   - Sem ele (desenvolvimento / Docker): vai para backend/uploads.
    ========================================================== */
 
 const crypto = require("crypto");
@@ -11,12 +14,18 @@ const { erros } = require("../utils/erros");
 
 const TIPOS = { "image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp" };
 
-fs.mkdirSync(env.pastaUploads, { recursive: true });
+const nomeAleatorio = (tipo) => crypto.randomBytes(12).toString("hex") + TIPOS[tipo];
 
-const armazenamento = multer.diskStorage({
-  destination: env.pastaUploads,
-  filename: (req, ficheiro, cb) => cb(null, crypto.randomBytes(12).toString("hex") + TIPOS[ficheiro.mimetype])
-});
+let armazenamento;
+if (env.blobToken) {
+  armazenamento = multer.memoryStorage();
+} else {
+  fs.mkdirSync(env.pastaUploads, { recursive: true });
+  armazenamento = multer.diskStorage({
+    destination: env.pastaUploads,
+    filename: (req, ficheiro, cb) => cb(null, nomeAleatorio(ficheiro.mimetype))
+  });
+}
 
 const upload = multer({
   storage: armazenamento,
@@ -28,3 +37,4 @@ const upload = multer({
 });
 
 module.exports = upload;
+module.exports.nomeAleatorio = nomeAleatorio;

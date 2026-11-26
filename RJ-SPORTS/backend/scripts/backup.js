@@ -1,56 +1,44 @@
 /* ==========================================================
-   Cópia de segurança: base de dados + fotos enviadas
+   Cópia de segurança dos dados da loja (PostgreSQL)
    Uso: npm run backup
-   Cria backups/AAAA-MM-DD_HHMM/ com:
-     - rjsports.db  (cópia consistente, feita com o servidor a correr)
-     - uploads/     (fotos dos produtos)
+   Cria backups/rj-sports-copia-AAAA-MM-DD_HHMM.json — o mesmo
+   formato de "Painel → Configurações → Descarregar cópia de
+   segurança", por isso repõe-se pelo painel (Repor cópia).
+   As fotos não entram: no Vercel ficam no Vercel Blob e no
+   Docker na pasta uploads (copie-a à parte).
    Mantém as últimas BACKUP_MANTER cópias (por omissão 14).
    ========================================================== */
 
 require("dotenv").config({ path: require("path").join(__dirname, "..", ".env") });
 const fs = require("fs");
 const path = require("path");
-const { PrismaClient } = require("@prisma/client");
-const env = require("../src/config/env");
+const prisma = require("../src/config/database");
+const { fotografia } = require("../src/services/adminService");
 
 const PASTA = process.env.BACKUP_DIR ? path.resolve(process.env.BACKUP_DIR) : path.join(__dirname, "..", "backups");
 const MANTER = Number(process.env.BACKUP_MANTER) || 14;
+const PADRAO = /^rj-sports-copia-\d{4}-\d{2}-\d{2}_\d{4}\.json$/;
 
 async function main() {
-  if (!/^file:/.test(process.env.DATABASE_URL || "")) {
-    throw new Error("Este script é para SQLite. Para PostgreSQL use pg_dump (ver README).");
-  }
-
-  const agora = new Date();
-  const nome = agora.toISOString().slice(0, 16).replace("T", "_").replace(":", "");
+  fs.mkdirSync(PASTA, { recursive: true });
+  const nome = "rj-sports-copia-" + new Date().toISOString().slice(0, 16).replace("T", "_").replace(":", "") + ".json";
   const destino = path.join(PASTA, nome);
-  fs.mkdirSync(destino, { recursive: true });
 
-  // 1) Base de dados — VACUUM INTO faz uma cópia consistente mesmo com a loja a funcionar
-  const prisma = new PrismaClient();
-  const ficheiroDb = path.join(destino, "rjsports.db").replace(/\\/g, "/").replace(/'/g, "''");
-  await prisma.$executeRawUnsafe("VACUUM INTO '" + ficheiroDb + "'");
-  await prisma.$disconnect();
+  const { db } = await fotografia({ nome: "", email: "", inicial: false });
+  fs.writeFileSync(destino, JSON.stringify(db, null, 2));
 
-  // 2) Fotos enviadas
-  if (fs.existsSync(env.pastaUploads)) {
-    fs.cpSync(env.pastaUploads, path.join(destino, "uploads"), {
-      recursive: true,
-      filter: (origem) => !origem.endsWith(".gitkeep")
-    });
-  }
-
-  // 3) Apagar cópias antigas
-  const copias = fs.readdirSync(PASTA).filter((d) => /^\d{4}-\d{2}-\d{2}_\d{4}$/.test(d)).sort();
+  // apagar cópias antigas
+  const copias = fs.readdirSync(PASTA).filter((f) => PADRAO.test(f)).sort();
   const aApagar = copias.slice(0, Math.max(0, copias.length - MANTER));
-  aApagar.forEach((d) => fs.rmSync(path.join(PASTA, d), { recursive: true, force: true }));
+  aApagar.forEach((f) => fs.rmSync(path.join(PASTA, f), { force: true }));
 
-  const tamanho = fs.statSync(path.join(destino, "rjsports.db")).size;
-  console.log("✔ Cópia criada em " + destino + " (" + Math.round(tamanho / 1024) + " KB de base de dados)");
+  console.log("✔ Cópia criada em " + destino + " (" + db.produtos.length + " produtos, " + db.encomendas.length + " encomendas)");
   if (aApagar.length) console.log("  Apagadas " + aApagar.length + " cópia(s) antiga(s).");
 }
 
-main().catch((erro) => {
-  console.error("✖ Falhou a cópia de segurança:", erro.message);
-  process.exitCode = 1;
-});
+main()
+  .catch((erro) => {
+    console.error("✖ Falhou a cópia de segurança:", erro.message);
+    process.exitCode = 1;
+  })
+  .finally(() => prisma.$disconnect());

@@ -5,20 +5,24 @@ Loja online de artigos de desporto para Moçambique, em regime de **dropshipping
 ```
 RJ-SPORTS/
 ├── frontend/   site da loja (HTML, CSS, JS) e painel de administração (frontend/admin)
-└── backend/    servidor Node.js (Express + Prisma): API, base de dados e fotos
+├── backend/    servidor Node.js (Express + Prisma + PostgreSQL): API, base de dados e fotos
+├── api/        entrada da API como função do Vercel (usa o backend)
+└── vercel.json configuração do Vercel
 ```
 
 ## Arrancar o projeto
 
-Precisa do **Node.js 18 ou mais recente**.
+Precisa do **Node.js 18 ou mais recente** e de um **PostgreSQL** neste computador, com uma base de dados vazia chamada `rjsports`.
 
 ```powershell
 cd RJ-SPORTS/backend
 npm install
-copy .env.example .env      # depois edite o .env (JWT_SECRET e ADMIN_PASSWORD)
+copy .env.example .env      # depois edite o .env (DATABASE_URL, JWT_SECRET e ADMIN_PASSWORD)
 npm run setup               # cria as tabelas e carrega os produtos
 npm run dev                 # arranca o servidor
 ```
+
+Para criar a base de dados: `createdb -U postgres rjsports` (ou pelo pgAdmin).
 
 Depois abra:
 
@@ -41,11 +45,11 @@ O site também abre só com os ficheiros (por exemplo, `python -m http.server` n
 - **Códigos de desconto** — o cliente escreve o código no resumo do checkout (`POST /api/descontos/validar` mostra o desconto). Ao registar a encomenda, o servidor volta a validar a campanha (ligada, dentro das datas, acima da compra mínima) e grava o desconto e o código; o `total` da encomenda já vem com o desconto.
 - **Acompanhar** — `GET /api/encomendas/:numero?telefone=…` só responde se o telefone coincidir.
 - **Painel** — login com cookie de sessão `httpOnly`/`SameSite=Strict` (JWT) e palavra-passe com bcrypt. As páginas recebem os dados de `/api/admin/dados.js` e cada gravação envia ao servidor só o que mudou.
-- **Fotos** — enviadas no painel para `backend/uploads` (JPEG, PNG ou WebP, até 3 MB).
+- **Fotos** — enviadas no painel (JPEG, PNG ou WebP, até 3 MB). No Vercel ficam no **Vercel Blob**; em localhost e no Docker, na pasta `backend/uploads`.
 
 ### Segurança incluída
 
-Cabeçalhos de segurança (Helmet, com Content-Security-Policy), limite de tentativas de login (10 / 15 min) e de encomendas, bloqueio de pedidos de outros sites, validação de todos os dados com Zod, e mensagens iguais para "email não existe" e "palavra-passe errada".
+Cabeçalhos de segurança (Helmet, com Content-Security-Policy), limite de tentativas de login (10 / 15 min) e de encomendas (contadores guardados na base de dados, para funcionar também no Vercel), bloqueio de pedidos de outros sites, validação de todos os dados com Zod, e mensagens iguais para "email não existe" e "palavra-passe errada".
 
 ## API
 
@@ -72,68 +76,79 @@ Cabeçalhos de segurança (Helmet, com Content-Security-Policy), limite de tenta
 | `npm run setup` | Aplica as migrações e carrega os dados iniciais (só numa base vazia) |
 | `npm run db:migrate` | Aplica migrações novas da base de dados |
 | `npm run db:nova-migracao -- --name descricao` | Depois de mudar o `schema.prisma`, cria a migração |
-| `npm run backup` | Cópia de segurança (base de dados + fotos) em `backend/backups` |
+| `npm run backup` | Cópia de segurança dos dados (ficheiro JSON, reposto pelo painel) em `backend/backups` |
 | `npm run db:studio` | Abre o Prisma Studio para ver a base de dados |
 
-## Pôr online: Vercel (site) + Railway (servidor)
+## Pôr online no Vercel
 
-O **Vercel** serve as páginas da loja e do painel. O **Railway** corre o servidor (API, base de dados SQLite e fotos num disco permanente). O Vercel reencaminha `/api`, `/uploads`, `/robots.txt` e `/sitemap.xml` para o Railway (`frontend/vercel.json`). Para o navegador é um único site, por isso o login do painel e as proteções funcionam como em localhost.
+Tudo fica no Vercel:
+- **Site e painel:** ficheiros estáticos (pasta `frontend`).
+- **API:** função do Vercel (`api/index.js`, que usa o mesmo Express do `backend`).
+- **Base de dados:** **Neon** (PostgreSQL).
+- **Fotos:** **Vercel Blob**.
 
-Escolha já o nome do projeto no Vercel (ex.: `rj-sports` → `https://rj-sports.vercel.app`): é preciso no passo 3.
+Para uma loja deste tamanho, os planos gratuitos chegam para começar.
 
-### 1. Railway — criar o servidor
+### 1. Criar o projeto
 
-1. Em [railway.com](https://railway.com): **New Project → Deploy from GitHub repo** e escolha o repositório da loja.
-2. No serviço criado: **Settings → Source → Root Directory** = `RJ-SPORTS`. O Railway lê o `railway.json` e constrói o `Dockerfile`.
-3. **Attach Volume** (clique direito no serviço) com o caminho **`/dados`**. Sem isto, as encomendas e as fotos perdem-se a cada atualização.
+1. Em [vercel.com](https://vercel.com): **Add New → Project** e importe o repositório do GitHub.
+2. **Root Directory** = `RJ-SPORTS`. O resto vem do `vercel.json`: *Framework Preset* = Other, a instalação, o build e a pasta `frontend`.
+3. O primeiro *Deploy* falha por ainda não haver base de dados. É normal: continue no passo 2.
 
-### 2. Railway — variáveis (separador *Variables*)
+### 2. Base de dados e fotos (separador *Storage* do projeto)
+
+1. **Create Database → Neon** (Postgres), região **Frankfurt** (a mais próxima de Moçambique) → ligar ao projeto. São criadas as variáveis `DATABASE_URL` e `DATABASE_URL_UNPOOLED`.
+2. **Create → Blob** → ligar ao projeto. É criada a variável `BLOB_READ_WRITE_TOKEN`.
+
+### 3. Variáveis (*Settings → Environment Variables*)
 
 | Variável | Valor |
 |---|---|
-| `SITE_URL` | `https://rj-sports.vercel.app` (o endereço do Vercel) |
-| `TRUST_PROXY` | `2` (Vercel + Railway à frente do servidor) |
 | `JWT_SECRET` | texto aleatório com 48+ caracteres |
 | `ADMIN_EMAIL` · `ADMIN_PASSWORD` | primeira conta do painel (palavra-passe com 12+ caracteres) |
 | `ADMIN_NOME` | opcional |
+| `SITE_URL` | opcional — sem ela usa o endereço de produção do Vercel |
 
-Depois: **Settings → Networking → Generate Domain**. Fica um endereço como `rj-sports-production.up.railway.app`. Confirme que `https://ESSE-ENDERECO/api/saude` responde `"ok":true`.
+Para gerar o `JWT_SECRET`: `node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"`.
 
-### 3. Ligar o site ao servidor
+### 4. Publicar
 
-Em `frontend/vercel.json`, troque as 4 ocorrências de `ENDERECO-DO-RAILWAY.up.railway.app` pelo endereço do passo anterior. Depois faça commit e push.
+Em **Deployments → Redeploy** (ou um `git push`). No build:
+1. as tabelas são criadas (`prisma migrate deploy`);
+2. o catálogo é carregado;
+3. é criada a conta do painel.
 
-### 4. Vercel — publicar o site
-
-1. Em [vercel.com](https://vercel.com): **Add New → Project** e importe o mesmo repositório.
-2. **Project Name** = o nome escolhido (ex.: `rj-sports`). **Root Directory** = `RJ-SPORTS/frontend`. **Framework Preset** = *Other*, sem comando de build.
-3. **Deploy**.
+Depois disso, cada `git push` publica de novo sozinho.
 
 ### 5. Verificar
 
-- Abra `https://rj-sports.vercel.app/api/saude`. O campo `"ip"` tem de ser **o seu IP** (compare com um site "qual é o meu IP"). Se aparecer outro, mude `TRUST_PROXY` no Railway para `3` (ou `1`) até coincidir. Assim, o limite de tentativas conta cada visitante em separado.
-- Entre em `https://rj-sports.vercel.app/admin/login.html` e **mude a palavra-passe**.
-- Faça uma encomenda de teste e apague-a depois no painel.
+- `https://SEU-PROJETO.vercel.app/api/saude` responde `"ok":true`. O campo `"ip"` tem de ser o seu IP.
+- Entre em `/admin/login.html` e **mude a palavra-passe**.
+- Envie uma foto num produto. O endereço da foto começa por `https://…blob.vercel-storage.com`.
+- Faça uma encomenda de teste e apague-a no painel.
 
 ### Domínio próprio (ex.: `rjsports.co.mz`)
 
-Acrescente o domínio no Vercel (**Settings → Domains**) e siga as instruções de DNS. No Railway, mude `SITE_URL` para `https://www.rjsports.co.mz` e ponha o endereço antigo em `ORIGENS_PERMITIDAS=https://rj-sports.vercel.app` (pode ter vários, separados por vírgulas).
-
-### Atualizar
-
-Cada `git push` para o GitHub publica sozinho nos dois serviços. As migrações novas da base de dados são aplicadas ao arrancar.
+1. **Settings → Domains** → acrescente o domínio e siga as instruções de DNS.
+2. Defina `SITE_URL=https://www.rjsports.co.mz`.
+3. Defina `ORIGENS_PERMITIDAS=https://SEU-PROJETO.vercel.app`, para o painel continuar a funcionar também nesse endereço.
 
 ### Cópias de segurança
 
-No Railway não há `crontab`:
-- descarregue a cópia em **Painel → Configurações → Descarregar cópia de segurança** (por exemplo, uma vez por semana);
-- ative as cópias automáticas do volume no Railway (separador **Backups** do volume), se o seu plano as incluir.
+- **Base de dados:** o Neon guarda o histórico e permite voltar a um momento anterior (*restore*). No plano gratuito são poucas horas, por isso não conte só com isto.
+- **Faça também a sua cópia:** **Painel → Configurações → Descarregar cópia de segurança**, por exemplo uma vez por semana. Em alternativa, corra no seu computador `npm run backup` com o `DATABASE_URL` do Neon no `.env`.
+- **Fotos:** ficam no Vercel Blob. A cópia de segurança guarda os endereços das fotos, não as imagens.
 
-Para **repor** uma cópia grande, entre no painel pelo endereço do Railway (`https://…up.railway.app/admin/login.html`): o Vercel limita o tamanho dos pedidos.
+### Limites do Vercel a ter em conta
 
-## Pôr online (servidor VPS com Docker)
+- **Pedidos até 4,5 MB.** As fotos (3 MB) cabem. Uma cópia de segurança maior do que isso não pode ser reposta pelo painel; nesse caso, reponha-a com o servidor a correr no seu computador e o `DATABASE_URL` do Neon.
+- **Builds de pré-visualização.** Cada push para outro ramo também corre as migrações. Se a base de dados for a mesma da produção, use migrações compatíveis com a versão anterior. Também pode ativar no Neon uma base separada para as pré-visualizações (*Preview branches*).
 
-É a forma mais simples e barata: um servidor virtual Linux (Ubuntu 22.04 ou 24.04, 1 GB de RAM chega para começar) com Docker. O **Caddy** trata do **HTTPS automaticamente** (certificado gratuito, renovado sozinho) e a base de dados **SQLite** fica num volume do Docker, com cópias diárias.
+## Alternativa: servidor VPS com Docker
+
+Um servidor virtual Linux (Ubuntu 22.04 ou 24.04, com 1 GB de RAM) e Docker:
+- o **Caddy** trata do **HTTPS automaticamente** (certificado gratuito, renovado sozinho);
+- a base de dados **PostgreSQL** e as fotos ficam em volumes do Docker, com cópias diárias.
 
 ### Antes de começar
 
@@ -157,7 +172,7 @@ cp .env.producao.example .env.producao
 nano .env.producao
 ```
 
-Preencha **DOMINIO**, **SITE_URL**, **JWT_SECRET** (texto aleatório longo), **ADMIN_EMAIL** e **ADMIN_PASSWORD** (12+ caracteres). O servidor recusa arrancar se faltar alguma destas.
+Preencha **DOMINIO**, **SITE_URL**, **JWT_SECRET** (texto aleatório longo), **POSTGRES_PASSWORD**, **ADMIN_EMAIL** e **ADMIN_PASSWORD** (12+ caracteres). O servidor recusa arrancar se faltar alguma destas.
 
 ### 3. Arrancar
 
@@ -176,10 +191,11 @@ No servidor, `crontab -e` e acrescente (todos os dias às 3h):
 0 3 * * * cd /caminho/para/RJ-SPORTS && docker compose exec -T loja npm run backup >> backup.log 2>&1
 ```
 
-As cópias ficam no volume (`/dados/backups`, as últimas 14). **Guarde também uma cópia fora do servidor** de vez em quando:
+As cópias (ficheiros JSON, as últimas 14) ficam no volume, em `/dados/backups`. As fotos ficam em `/dados/uploads`. **Guarde também uma cópia fora do servidor** de vez em quando:
 
 ```bash
 docker compose cp loja:/dados/backups ./backups-copia
+docker compose cp loja:/dados/uploads ./uploads-copia
 ```
 
 Além disso, o painel tem *Configurações → Descarregar cópia de segurança* (ficheiro JSON).
@@ -193,16 +209,11 @@ docker compose up -d --build  # as migrações novas são aplicadas sozinhas
 
 ### Repor uma cópia de segurança
 
+No painel: **Configurações → Repor cópia de segurança** e escolha o ficheiro JSON. As fotos repõem-se com:
+
 ```bash
-docker compose stop loja
-docker compose cp ./backups-copia/AAAA-MM-DD_HHMM/rjsports.db loja:/dados/rjsports.db
-docker compose cp ./backups-copia/AAAA-MM-DD_HHMM/uploads/. loja:/dados/uploads/
-docker compose start loja
+docker compose cp ./uploads-copia/. loja:/dados/uploads/
 ```
-
-### Alternativa: PostgreSQL
-
-Para crescer (vários servidores, muito tráfego), mude `provider = "sqlite"` para `"postgresql"` em `backend/prisma/schema.prisma`, aponte o `DATABASE_URL` para o PostgreSQL, apague a pasta `backend/prisma/migrations` e gere-a de novo (`npm run db:nova-migracao -- --name inicial`). As cópias passam a ser feitas com `pg_dump`.
 
 ### Já incluído para produção
 

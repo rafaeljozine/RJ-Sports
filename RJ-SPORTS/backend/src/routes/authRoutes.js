@@ -8,6 +8,7 @@ const c = require("../controllers/authController");
 const { exigirAdmin } = require("../middlewares/authMiddleware");
 const validar = require("../validators/validar");
 const v = require("../validators/esquemas");
+const LimiteStore = require("../utils/limiteStore");
 
 // no máximo 10 tentativas de login a cada 15 minutos por IP
 const limiteLogin = rateLimit({
@@ -16,6 +17,7 @@ const limiteLogin = rateLimit({
   standardHeaders: "draft-7",
   legacyHeaders: false,
   skipSuccessfulRequests: true,
+  store: new LimiteStore("login"),
   message: { erro: "Demasiadas tentativas. Tente novamente daqui a 15 minutos." }
 });
 

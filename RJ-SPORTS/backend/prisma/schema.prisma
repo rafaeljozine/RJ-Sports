@@ -1,18 +1,23 @@
 // ==========================================================
 // RJ SPORTS — modelo da base de dados (Prisma)
-// Desenvolvimento: SQLite. Para produção, mude o provider para
-// "postgresql" (ou "mysql") e o DATABASE_URL no .env.
+// Base de dados: PostgreSQL (Neon no Vercel; local ou em Docker
+// em desenvolvimento). DATABASE_URL = ligação normal (com pooling
+// no Neon); DATABASE_URL_UNPOOLED = ligação direta, usada pelas
+// migrações. Em local podem ser iguais.
 // Valores em meticais (MT) guardados como inteiros.
 // Listas (tamanhos, público, idades) guardadas como texto JSON.
 // ==========================================================
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  // "native" = este computador / Docker; rhel = funções do Vercel
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 model Admin {
@@ -148,4 +153,15 @@ model Despesa {
 model Configuracao {
   chave String @id
   valor String
+}
+
+// Limite de tentativas (login, encomendas…) partilhado entre as
+// instâncias do servidor — no Vercel cada pedido pode ir para uma
+// instância diferente, por isso não pode ficar só na memória.
+model LimitePedido {
+  chave    String   @id
+  contagem Int
+  expiraEm DateTime
+
+  @@index([expiraEm])
 }

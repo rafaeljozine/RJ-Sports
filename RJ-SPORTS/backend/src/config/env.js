@@ -12,11 +12,17 @@ const env = {
   producao,
   porta: Number(process.env.PORT) || 3000,
   // endereço público da loja (ex.: https://www.rjsports.co.mz) — usado no sitemap
-  urlSite: (process.env.SITE_URL || "").replace(/\/+$/, ""),
+  // no Vercel, sem SITE_URL, usa o domínio de produção do projeto
+  urlSite: (process.env.SITE_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL ? "https://" + process.env.VERCEL_PROJECT_PRODUCTION_URL : "")
+  ).replace(/\/+$/, ""),
+  vercel: !!process.env.VERCEL,
+  // fotos no Vercel Blob (vazio = pasta uploads)
+  blobToken: process.env.BLOB_READ_WRITE_TOKEN || "",
   // outros endereços do site que podem enviar pedidos à API
-  // (ex.: o domínio .vercel.app quando o site está no Vercel)
+  // (ex.: o endereço .vercel.app depois de ligar um domínio próprio)
   origensExtra: (process.env.ORIGENS_PERMITIDAS || "").split(",").map((o) => o.trim().replace(/\/+$/, "")).filter(Boolean),
-  // quantos proxies há à frente do servidor (Caddy = 1; Vercel + Railway = 2)
+  // quantos proxies há à frente do servidor (Vercel = 1; Caddy = 1)
   proxies: process.env.TRUST_PROXY != null && process.env.TRUST_PROXY !== "" ? Number(process.env.TRUST_PROXY) : 1,
   jwtSegredo: process.env.JWT_SECRET || "",
   sessaoHoras: Number(process.env.SESSAO_HORAS) || 8,
