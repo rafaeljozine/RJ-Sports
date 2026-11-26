@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loja — RJ Sports</title>
+  <meta name="description" content="Todos os artigos de desporto da RJ Sports. Encomende online e pague apenas quando receber.">
+
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#0057ff">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="RJ Sports">
+  <meta property="og:locale" content="pt_PT">
+  <meta property="og:title" content="Loja — RJ Sports">
+  <meta property="og:description" content="Camisolas, chuteiras, ténis e acessórios para homem, mulher e criança. Pagamento na entrega em todo Moçambique.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Russo+One&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/loja.css">
+</head>
+<body>
+
+  <div id="cabecalho"></div>
+
+  <main>
+    <div class="container loja">
+      <div class="loja__topo">
+        <h1 id="titulo-loja">Loja</h1>
+        <p class="loja__descricao" id="descricao-loja">Tudo para o seu desporto. Encomende online e pague apenas quando receber.</p>
+      </div>
+
+      <!-- Barra: filtros em linha (computador) / botão que abre painel (telemóvel) -->
+      <div class="barra-loja">
+        <button class="botao-filtros" data-abrir="filtros">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+          Filtros <span class="botao-filtros__num" id="num-filtros" hidden></span>
+        </button>
+
+        <aside class="filtros" id="filtros" aria-label="Filtros">
+          <div class="filtros__topo">
+            <h2>Filtros</h2>
+            <button class="icone-btn" data-fechar aria-label="Fechar filtros">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6 6 18"/></svg>
+            </button>
+          </div>
+
+          <div class="filtros__corpo">
+            <details class="filtro" data-grupo="publico">
+              <summary>Para</summary>
+              <div class="filtro__corpo" id="filtro-publico"></div>
+            </details>
+
+            <details class="filtro" data-grupo="idade" id="grupo-idade" hidden>
+              <summary>Idade</summary>
+              <div class="filtro__corpo" id="filtro-idades"></div>
+            </details>
+
+            <details class="filtro" data-grupo="categoria">
+              <summary>Categoria</summary>
+              <div class="filtro__corpo" id="filtro-categorias"></div>
+            </details>
+
+            <details class="filtro" data-grupo="preco">
+              <summary>Preço</summary>
+              <div class="filtro__corpo filtro__corpo--preco">
+                <div class="precos">
+                  <label class="visualmente-oculto" for="preco-min">Preço mínimo</label>
+                  <input type="number" id="preco-min" inputmode="numeric" min="0" step="50" placeholder="Mín. MT">
+                  <span aria-hidden="true">—</span>
+                  <label class="visualmente-oculto" for="preco-max">Preço máximo</label>
+                  <input type="number" id="preco-max" inputmode="numeric" min="0" step="50" placeholder="Máx. MT">
+                </div>
+                <p class="precos__nota" id="nota-precos"></p>
+              </div>
+            </details>
+
+            <details class="filtro" data-grupo="tamanho">
+              <summary>Tamanho</summary>
+              <div class="filtro__corpo filtro__corpo--tamanhos">
+                <div class="tamanhos-filtro" id="filtro-tamanhos"></div>
+              </div>
+            </details>
+
+            <details class="filtro" data-grupo="ofertas">
+              <summary>Ofertas</summary>
+              <div class="filtro__corpo">
+                <label class="opcao"><input type="checkbox" id="filtro-promo"> Só produtos em promoção</label>
+                <label class="opcao"><input type="checkbox" id="filtro-novo"> Só novidades</label>
+              </div>
+            </details>
+          </div>
+
+          <div class="filtros__rodape">
+            <button class="btn btn--bloco" data-fechar id="ver-resultados">Ver resultados</button>
+          </div>
+        </aside>
+
+        <div class="barra-loja__direita">
+          <span class="barra-loja__contagem" id="contagem" aria-live="polite"></span>
+          <div class="ordenar">
+            <label for="ordenar">Ordenar por</label>
+            <select id="ordenar">
+              <option value="destaque">Em destaque</option>
+              <option value="novidades">Novidades</option>
+              <option value="preco-asc">Preço: mais baixo</option>
+              <option value="preco-desc">Preço: mais alto</option>
+              <option value="nome">Nome: A–Z</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="filtros-ativos" id="filtros-ativos"></div>
+      <section aria-label="Produtos">
+        <div class="grelha-produtos" id="grelha-loja"></div>
+      </section>
+    </div>
+  </main>
+
+  <div id="rodape"></div>
+
+  <!-- Catálogo do servidor (se o site estiver a correr com o backend) -->
+  <script src="/api/catalogo.js"></script>
+  <script src="js/produtos.js"></script>
+  <script src="js/carrinho.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/filtros.js"></script>
+</body>
+</html>

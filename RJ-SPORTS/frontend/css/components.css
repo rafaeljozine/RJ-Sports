@@ -1,0 +1,466 @@
+/* ==========================================================
+   RJ SPORTS — Componentes reutilizáveis
+   ========================================================== */
+
+/* ---------- Botões ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 28px;
+  border: 1.5px solid var(--cor-escuro);
+  border-radius: var(--raio);
+  background: var(--cor-escuro);
+  color: var(--cor-sobre-escuro);
+  font-family: var(--fonte-titulo);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: background var(--transicao), color var(--transicao), border-color var(--transicao);
+}
+
+.btn:hover {
+  background: transparent;
+  color: var(--cor-escuro);
+}
+
+.btn svg {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.btn--destaque {
+  background: var(--cor-destaque);
+  border-color: var(--cor-destaque);
+  color: #fff;
+}
+
+.btn--destaque:hover {
+  background: var(--cor-destaque-escuro);
+  border-color: var(--cor-destaque-escuro);
+  color: #fff;
+}
+
+.btn--contorno {
+  background: transparent;
+  color: var(--cor-escuro);
+}
+
+.btn--contorno:hover {
+  background: var(--cor-escuro);
+  color: var(--cor-sobre-escuro);
+}
+
+.btn--claro {
+  background: #fff;
+  border-color: #fff;
+  color: var(--cor-escuro);
+}
+
+.btn--claro:hover {
+  background: transparent;
+  color: #fff;
+}
+
+.btn--bloco {
+  width: 100%;
+}
+
+.link-sublinhado {
+  font-family: var(--fonte-titulo);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1.5px no-repeat;
+  padding-bottom: 3px;
+  transition: background-size var(--transicao);
+}
+
+.link-sublinhado:hover {
+  background-size: 0 1.5px;
+  background-position: 100% 100%;
+}
+
+/* ---------- Ícone botão ---------- */
+.icone-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  transition: background var(--transicao);
+}
+
+.icone-btn:hover {
+  background: var(--cor-fundo-alt);
+}
+
+.icone-btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.contador {
+  position: absolute;
+  top: 4px;
+  right: 2px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--cor-destaque);
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+}
+
+.contador[data-vazio="true"] {
+  display: none;
+}
+
+/* ---------- Etiquetas ---------- */
+.etiqueta {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 2px;
+  background: var(--cor-escuro);
+  color: #fff;
+  font-family: var(--fonte-titulo);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.etiqueta--promo {
+  background: var(--cor-promo);
+}
+
+.etiqueta--novo {
+  background: #fff;
+  color: var(--cor-escuro);
+}
+
+/* ---------- Preço ---------- */
+.preco {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.preco__antigo {
+  color: var(--cor-texto-suave);
+  font-weight: 400;
+  font-size: 0.875em;
+  text-decoration: line-through;
+}
+
+.preco--promo .preco__atual {
+  color: var(--cor-promo);
+}
+
+/* ---------- Cartão de produto ---------- */
+.grelha-produtos {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(12px, 2vw, 28px);
+}
+
+.cartao-produto {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.cartao-produto__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--raio);
+  background: var(--cor-fundo-alt);
+  /* elevação suave ao passar o rato */
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.35s ease !important;
+}
+
+.cartao-produto:hover .cartao-produto__media {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px -12px rgba(0, 0, 0, 0.25);
+}
+
+.cartao-produto__nome a {
+  transition: color 0.25s ease !important;
+}
+
+.cartao-produto:hover .cartao-produto__nome a {
+  color: var(--cor-destaque);
+}
+
+/* entrada leve: os cartões sobem e aparecem quando chegam ao ecrã
+   (mantém-se mesmo com animações reduzidas no sistema, por ser suave) */
+.cartao-produto.revelar {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.cartao-produto.revelar.visivel {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) !important;
+  transition-delay: var(--atraso, 0ms) !important;
+}
+
+.cartao-produto__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* esconde o texto alternativo enquanto a imagem carrega ou falha */
+  color: transparent;
+  font-size: 0;
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.cartao-produto:hover .cartao-produto__media img {
+  transform: scale(1.05);
+}
+
+.cartao-produto__media img {
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) !important;
+}
+
+.cartao-produto__marcador {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--fonte-titulo);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  color: rgba(17, 17, 17, 0.08);
+  text-transform: uppercase;
+}
+
+.cartao-produto__etiquetas {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.cartao-produto__rapido {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
+  min-height: 44px;
+  padding: 0 12px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity var(--transicao), transform var(--transicao), background var(--transicao), color var(--transicao);
+}
+
+.cartao-produto:hover .cartao-produto__rapido,
+.cartao-produto__rapido:focus-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.cartao-produto__info {
+  padding-top: 14px;
+}
+
+.cartao-produto__categoria {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+  margin-bottom: 2px;
+}
+
+.cartao-produto__nome {
+  font-family: var(--fonte-corpo);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0;
+  text-transform: none;
+  margin: 0 0 6px;
+}
+
+.cartao-produto__nome a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* Em ecrãs de toque ou pequenos o botão rápido fica sempre visível */
+@media (hover: none), (max-width: 720px) {
+  .cartao-produto__rapido {
+    opacity: 1;
+    transform: none;
+    min-height: 38px;
+    font-size: 0.625rem;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    padding: 0 8px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+  }
+}
+
+/* ---------- Formulários ---------- */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+  width: 100%;
+  min-height: 50px;
+  padding: 12px 14px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: #fff;
+  transition: border-color var(--transicao);
+}
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+  outline: none;
+  border-color: var(--cor-escuro);
+}
+
+/* ---------- Chip de tamanho (loja e produto) ---------- */
+.chip-tamanho {
+  position: relative;
+}
+
+.chip-tamanho input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chip-tamanho span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 46px;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--transicao), background var(--transicao), color var(--transicao);
+}
+
+.chip-tamanho:hover span {
+  border-color: var(--cor-escuro);
+}
+
+.chip-tamanho input:checked + span {
+  background: var(--cor-escuro);
+  border-color: var(--cor-escuro);
+  color: #fff;
+}
+
+.chip-tamanho input:focus-visible + span {
+  outline: 2px solid var(--cor-destaque);
+  outline-offset: 2px;
+}
+
+/* ---------- Seletor de quantidade ---------- */
+.quantidade {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+}
+
+.quantidade button {
+  width: 36px;
+  height: 36px;
+  font-size: 1.1rem;
+}
+
+.quantidade span {
+  min-width: 28px;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* ---------- Aviso (toast) ---------- */
+.aviso {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 300;
+  max-width: calc(100% - 32px);
+  padding: 14px 22px;
+  border-radius: var(--raio);
+  background: var(--cor-escuro);
+  color: #fff;
+  font-size: 0.875rem;
+  box-shadow: var(--sombra);
+  transform: translate(-50%, 30px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transicao), transform var(--transicao);
+}
+
+.aviso.visivel {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 1024px) {
+  .grelha-produtos {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .grelha-produtos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .btn {
+    min-height: 48px;
+    padding: 0 20px;
+  }
+}

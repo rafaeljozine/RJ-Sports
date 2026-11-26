@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RJ Sports — Artigos de desporto com pagamento na entrega</title>
+  <meta name="description" content="Loja de artigos de desporto em Moçambique. Encomende online e pague apenas quando receber.">
+
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#0057ff">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="RJ Sports">
+  <meta property="og:locale" content="pt_PT">
+  <meta property="og:title" content="RJ Sports — Artigos de desporto com pagamento na entrega">
+  <meta property="og:description" content="Artigos de desporto com entrega em todo Moçambique. Encomende online e pague apenas quando receber.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Russo+One&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+
+  <div id="cabecalho"></div>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" id="hero" aria-roledescription="carrossel" aria-label="Destaques">
+      <!-- Slides preenchidos a partir de js/produtos.js (RJS.imagens.heroSlides) -->
+      <div class="hero__slides" id="hero-slides"></div>
+      <span class="hero__marca-agua" aria-hidden="true">RJ</span>
+      <div class="container hero__conteudo">
+        <span class="sobretitulo">Nova temporada · 2026</span>
+        <h1>Joga mais.<br><em>Paga na entrega.</em></h1>
+        <p class="hero__texto">Camisolas, chuteiras, ténis e acessórios entregues à sua porta em todo Moçambique. Sem cartão, sem complicações.</p>
+        <div class="hero__botoes">
+          <a href="loja.html" class="btn btn--destaque">Comprar agora</a>
+          <a href="#como-funciona" class="btn btn--claro">Como funciona</a>
+        </div>
+      </div>
+
+      <!-- Controlos do slide -->
+      <div class="hero__controlos" id="hero-controlos" hidden>
+        <button class="hero__seta" data-slide="anterior" aria-label="Foto anterior">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 6-6 6 6 6"/></svg>
+        </button>
+        <div class="hero__pontos" id="hero-pontos" role="tablist" aria-label="Escolher foto"></div>
+        <button class="hero__seta" data-slide="seguinte" aria-label="Foto seguinte">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Benefícios -->
+    <section class="beneficios" aria-label="Vantagens">
+      <div class="container beneficios__grelha">
+        <div class="beneficio">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>
+          <div><strong>Pagamento na entrega</strong><span>Paga só quando recebe</span></div>
+        </div>
+        <div class="beneficio">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.5"/><circle cx="17" cy="17.5" r="1.5"/></svg>
+          <div><strong>Entregas nacionais</strong><span>Para todas as províncias</span></div>
+        </div>
+        <div class="beneficio">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5a9.4 9.4 0 0 0-8.1 14.2L2.6 21.4l4.8-1.3A9.4 9.4 0 1 0 12 2.5Zm0 17.1c-1.4 0-2.8-.4-4-1.1l-.3-.2-2.8.8.8-2.8-.2-.3A7.7 7.7 0 1 1 12 19.6Zm4.3-5.8c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5l.4-.4.2-.4v-.4l-.7-1.8c-.2-.5-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3 1 2.5c.1.2 1.6 2.5 4 3.5 1.5.6 2 .7 2.8.6.4-.1 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1l-.4-.2Z"/></svg>
+          <div><strong>Apoio por WhatsApp</strong><span>Respondemos rapidamente</span></div>
+        </div>
+        <div class="beneficio">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+          <div><strong>Compra segura</strong><span>Confirme antes de pagar</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categorias -->
+    <section class="secao">
+      <div class="container">
+        <div class="secao__topo">
+          <div>
+            <span class="sobretitulo">Explorar</span>
+            <h2>Compre por desporto</h2>
+          </div>
+          <a href="loja.html" class="link-sublinhado">Ver toda a loja</a>
+        </div>
+        <div class="grelha-categorias" id="grelha-categorias"></div>
+      </div>
+    </section>
+
+    <!-- Destaques -->
+    <section class="secao secao--alt">
+      <div class="container">
+        <div class="secao__topo">
+          <div>
+            <span class="sobretitulo">Os mais pedidos</span>
+            <h2>Destaques</h2>
+          </div>
+          <a href="loja.html" class="link-sublinhado">Ver tudo</a>
+        </div>
+        <div class="grelha-produtos" id="grelha-destaques"></div>
+      </div>
+    </section>
+
+    <!-- Banner dividido -->
+    <section class="banner-dividido">
+      <div class="banner-dividido__media">
+        <!-- A imagem é definida em js/produtos.js (RJS.imagens.corrida) -->
+        <img id="imagem-corrida" alt="" loading="lazy" onerror="this.remove()">
+      </div>
+      <div class="banner-dividido__texto">
+        <span class="sobretitulo">Coleção corrida</span>
+        <h2>Feito para quem não para</h2>
+        <p>Calçado confortável, roupa técnica e acessórios para treinar todos os dias, da Marginal ao ginásio.</p>
+        <a href="loja.html?c=corrida" class="btn btn--claro">Descobrir corrida</a>
+      </div>
+    </section>
+
+    <!-- Como funciona -->
+    <section class="secao" id="como-funciona">
+      <div class="container">
+        <div class="secao__topo">
+          <div>
+            <span class="sobretitulo">Simples e sem riscos</span>
+            <h2>Como funciona</h2>
+          </div>
+        </div>
+        <div class="passos">
+          <div class="passo">
+            <h3>Escolha</h3>
+            <p>Navegue pela loja e adicione ao carrinho os produtos e tamanhos que pretende.</p>
+          </div>
+          <div class="passo">
+            <h3>Encomende</h3>
+            <p>Preencha o nome, o telefone e a morada. Ligamos para confirmar a encomenda e a taxa de entrega.</p>
+          </div>
+          <div class="passo">
+            <h3>Pague ao receber</h3>
+            <p>Recebe o produto em casa e paga na entrega, em numerário ou M-Pesa / e-Mola.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Novidades -->
+    <section class="secao secao--alt">
+      <div class="container">
+        <div class="secao__topo">
+          <div>
+            <span class="sobretitulo">Acabados de chegar</span>
+            <h2>Novidades</h2>
+          </div>
+          <a href="loja.html" class="link-sublinhado">Ver tudo</a>
+        </div>
+        <div class="grelha-produtos" id="grelha-novidades"></div>
+      </div>
+    </section>
+
+    <!-- Chamada final -->
+    <section class="secao chamada">
+      <!-- Foto de fundo: assets/images/banners/ajuda.jpg -->
+      <img class="chamada__fundo" src="assets/images/banners/ajuda.jpg" alt="" loading="lazy" onerror="this.remove()">
+      <div class="container chamada__conteudo">
+        <span class="sobretitulo">Precisa de ajuda?</span>
+        <h2>Fale connosco antes de encomendar</h2>
+        <p>Tem dúvidas sobre tamanhos, prazos ou entregas na sua zona? Envie-nos uma mensagem.</p>
+        <div class="chamada__botoes">
+          <a href="#" class="btn btn--destaque" id="link-whatsapp" target="_blank" rel="noopener">Falar no WhatsApp</a>
+          <a href="acompanhar.html" class="btn btn--claro">Acompanhar encomenda</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="rodape"></div>
+
+  <!-- Catálogo do servidor (se o site estiver a correr com o backend) -->
+  <script src="/api/catalogo.js"></script>
+  <script src="js/produtos.js"></script>
+  <script src="js/carrinho.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    (function () {
+      montarSlideHero();
+
+      /* ---------- Slide do topo ---------- */
+      function montarSlideHero() {
+        var hero = document.getElementById("hero");
+        var caixa = document.getElementById("hero-slides");
+        var pontos = document.getElementById("hero-pontos");
+        var slides = RJS.imagens.heroSlides || [{ src: RJS.imagens.hero }];
+        var INTERVALO = 6000;
+        var atual = 0;
+        var temporizador = null;
+        var parado = false;
+
+        caixa.innerHTML = slides.map(function (s, i) {
+          var srcset = s.srcMovel ? ' srcset="' + s.srcMovel + ' 900w, ' + s.src + ' 2400w" sizes="100vw"' : "";
+          var estilo = "";
+          if (s.posicao) estilo += "--posicao:" + s.posicao + ";";
+          if (s.posicaoMovel) estilo += "--posicao-movel:" + s.posicaoMovel + ";";
+          return (
+            '<div class="hero__slide' + (i === 0 ? " ativo" : "") + (s.espelhar ? " hero__slide--espelhar" : "") +
+            '" style="' + estilo + '" aria-hidden="' + (i !== 0) + '">' +
+            '<img src="' + s.src + '"' + srcset + ' alt="" ' + (i === 0 ? 'fetchpriority="high"' : 'loading="lazy"') +
+            ' onerror="this.parentNode.remove()"></div>'
+          );
+        }).join("");
+
+        if (slides.length < 2) return;
+
+        var elementos = caixa.querySelectorAll(".hero__slide");
+        document.getElementById("hero-controlos").hidden = false;
+        pontos.innerHTML = slides.map(function (s, i) {
+          return '<button class="hero__ponto' + (i === 0 ? " ativo" : "") + '" role="tab" aria-selected="' + (i === 0) +
+            '" aria-label="Foto ' + (i + 1) + ' de ' + slides.length + '" data-ir="' + i + '"><span></span></button>';
+        }).join("");
+        var botoesPonto = pontos.querySelectorAll(".hero__ponto");
+
+        function mostrar(n) {
+          var total = elementos.length;
+          n = (n + total) % total;
+          elementos[atual].classList.remove("ativo");
+          elementos[atual].setAttribute("aria-hidden", "true");
+          botoesPonto[atual].classList.remove("ativo");
+          botoesPonto[atual].setAttribute("aria-selected", "false");
+          atual = n;
+          // carrega já a imagem seguinte para não haver espera
+          var seguinte = elementos[(n + 1) % total].querySelector("img");
+          if (seguinte) seguinte.loading = "eager";
+          elementos[atual].classList.add("ativo");
+          elementos[atual].setAttribute("aria-hidden", "false");
+          botoesPonto[atual].classList.add("ativo");
+          botoesPonto[atual].setAttribute("aria-selected", "true");
+          reiniciar();
+        }
+
+        function reiniciar() {
+          clearTimeout(temporizador);
+          // reinicia a barra de progresso do ponto ativo
+          hero.style.setProperty("--intervalo", INTERVALO + "ms");
+          botoesPonto[atual].classList.remove("ativo");
+          void botoesPonto[atual].offsetWidth;
+          botoesPonto[atual].classList.add("ativo");
+          if (!parado) temporizador = setTimeout(function () { mostrar(atual + 1); }, INTERVALO);
+        }
+
+        function pausar(estado) {
+          parado = estado;
+          hero.classList.toggle("pausado", estado);
+          if (estado) clearTimeout(temporizador);
+          else reiniciar();
+        }
+
+        hero.addEventListener("click", function (ev) {
+          var seta = ev.target.closest("[data-slide]");
+          if (seta) mostrar(atual + (seta.getAttribute("data-slide") === "seguinte" ? 1 : -1));
+          var ponto = ev.target.closest("[data-ir]");
+          if (ponto) mostrar(Number(ponto.getAttribute("data-ir")));
+        });
+
+        // continua a passar com o rato por cima; só pausa quando o separador não está visível
+        document.addEventListener("visibilitychange", function () { pausar(document.hidden); });
+
+        // deslizar com o dedo no telemóvel
+        var inicioX = null;
+        hero.addEventListener("touchstart", function (ev) { inicioX = ev.touches[0].clientX; }, { passive: true });
+        hero.addEventListener("touchend", function (ev) {
+          if (inicioX === null) return;
+          var dx = ev.changedTouches[0].clientX - inicioX;
+          if (Math.abs(dx) > 50) mostrar(atual + (dx < 0 ? 1 : -1));
+          inicioX = null;
+        });
+
+        reiniciar();
+      }
+      document.getElementById("imagem-corrida").src = RJS.imagens.corrida;
+
+      var seta ='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+
+      document.getElementById("grelha-categorias").innerHTML = RJS.categorias.map(function (c) {
+        return (
+          '<a class="cartao-categoria cartao-categoria--' + c.id + '" href="loja.html?c=' + c.id + '">' +
+          '  <img src="' + RJS.imagens.categorias[c.id] + '" alt="" loading="lazy" onerror="this.remove()">' +
+          '  <span class="cartao-categoria__seta" aria-hidden="true">' + seta + "</span>" +
+          "  <div><h3>" + c.nome + "</h3><p>" + c.descricao + "</p></div>" +
+          "</a>"
+        );
+      }).join("");
+
+      document.getElementById("grelha-destaques").innerHTML = RJS.produtos
+        .filter(function (p) { return p.destaque; }).slice(0, 4).map(RJS.cartaoProduto).join("");
+
+      document.getElementById("grelha-novidades").innerHTML = RJS.produtos
+        .filter(function (p) { return p.novo; }).slice(0, 4).map(RJS.cartaoProduto).join("");
+
+      document.getElementById("link-whatsapp").href =
+        "https://wa.me/" + RJS.loja.whatsapp + "?text=" + encodeURIComponent("Olá RJ Sports, tenho uma dúvida.");
+    })();
+  </script>
+</body>
+</html>

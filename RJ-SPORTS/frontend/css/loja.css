@@ -1,0 +1,441 @@
+/* ==========================================================
+   RJ SPORTS — Página da loja (catálogo com filtros)
+   Computador: filtros numa barra horizontal com menus
+   suspensos, produtos em 4 colunas.
+   Telemóvel: filtros num painel lateral.
+   ========================================================== */
+
+/* ---------- Estrutura ---------- */
+.loja {
+  padding-top: clamp(28px, 4vw, 48px);
+  padding-bottom: var(--secao-espaco);
+}
+
+/* ---------- Título ---------- */
+.loja__topo {
+  margin-bottom: clamp(20px, 3vw, 32px);
+}
+
+.loja__topo h1 {
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  margin: 0;
+}
+
+.loja__descricao {
+  max-width: 560px;
+  margin: 10px 0 0;
+  color: var(--cor-texto-suave);
+}
+
+/* ---------- Barra (filtros + ordenação) ---------- */
+.barra-loja {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  margin-bottom: 20px;
+  border-top: 1px solid var(--cor-borda);
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.barra-loja__direita {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-left: auto;
+}
+
+.barra-loja__contagem {
+  font-size: 0.875rem;
+  color: var(--cor-texto-suave);
+  white-space: nowrap;
+}
+
+.botao-filtros {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.botao-filtros svg {
+  width: 18px;
+  height: 18px;
+}
+
+.botao-filtros__num {
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  background: var(--cor-destaque);
+  color: #fff;
+  font-size: 0.6875rem;
+  line-height: 20px;
+  text-align: center;
+}
+
+.ordenar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+}
+
+.ordenar label {
+  color: var(--cor-texto-suave);
+  white-space: nowrap;
+}
+
+.ordenar select {
+  min-height: 42px;
+  padding: 0 34px 0 12px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center / 16px;
+  appearance: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ---------- Filtros ativos ---------- */
+.filtros-ativos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.filtros-ativos:empty {
+  display: none;
+}
+
+.chip-ativo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px 6px 12px;
+  border-radius: 999px;
+  background: var(--cor-fundo-alt);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  transition: background var(--transicao);
+}
+
+.chip-ativo:hover {
+  background: var(--cor-borda);
+}
+
+.chip-ativo span {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.limpar-filtros {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------- Conteúdo dos filtros (comum) ---------- */
+.filtros__topo,
+.filtros__rodape {
+  display: none;
+}
+
+.filtro summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.filtro summary::-webkit-details-marker {
+  display: none;
+}
+
+.opcao {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.opcao input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--cor-destaque);
+  cursor: pointer;
+}
+
+.opcao__contagem {
+  margin-left: auto;
+  padding-left: 16px;
+  font-size: 0.8125rem;
+  color: var(--cor-texto-suave);
+}
+
+.precos {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+}
+
+.precos input {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 10px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  font-size: 0.875rem;
+}
+
+.precos input:focus {
+  outline: none;
+  border-color: var(--cor-escuro);
+}
+
+.precos__nota {
+  margin: 8px 0 0;
+  font-size: 0.75rem;
+  color: var(--cor-texto-suave);
+}
+
+.tamanhos-filtro {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ---------- Computador: barra horizontal com menus suspensos ---------- */
+@media (min-width: 961px) {
+  .filtros__corpo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .filtro {
+    position: relative;
+  }
+
+  .filtro summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 42px;
+    padding: 0 14px 0 16px;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio);
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: border-color var(--transicao);
+    user-select: none;
+  }
+
+  .filtro summary:hover,
+  .filtro[open] summary {
+    border-color: var(--cor-escuro);
+  }
+
+  .filtro summary::after {
+    content: "";
+    width: 7px;
+    height: 7px;
+    margin-top: -4px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform var(--transicao), margin var(--transicao);
+  }
+
+  .filtro[open] summary::after {
+    margin-top: 3px;
+    transform: rotate(-135deg);
+  }
+
+  /* número de opções ativas dentro do botão */
+  .filtro summary[data-ativos]::before {
+    content: attr(data-ativos);
+    order: 2;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 10px;
+    background: var(--cor-destaque);
+    color: #fff;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 20px;
+    text-align: center;
+  }
+
+  .filtro summary::after {
+    order: 3;
+  }
+
+  .filtro__corpo {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 60;
+    min-width: 240px;
+    padding: 14px 18px;
+    background: var(--cor-fundo);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-lg);
+    box-shadow: var(--sombra);
+  }
+
+  .filtro__corpo--preco {
+    width: 300px;
+  }
+
+  .filtro__corpo--tamanhos {
+    width: 320px;
+  }
+
+  .filtro[open] .filtro__corpo {
+    animation: menu-entrar 0.18s ease-out;
+  }
+
+  @keyframes menu-entrar {
+    from { opacity: 0; transform: translateY(-4px); }
+  }
+}
+
+/* ---------- Grelha: 4 colunas ---------- */
+.loja .grelha-produtos {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.loja-vazia {
+  padding: 64px 24px;
+  text-align: center;
+  background: var(--cor-fundo-alt);
+  border-radius: var(--raio);
+}
+
+.loja-vazia h2 {
+  font-size: 1.5rem;
+}
+
+.loja-vazia p {
+  color: var(--cor-texto-suave);
+  margin-bottom: 20px;
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 1100px) {
+  .loja .grelha-produtos {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .botao-filtros {
+    display: inline-flex;
+  }
+
+  /* os filtros passam a ser um painel lateral */
+  .filtros {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 210;
+    display: flex;
+    flex-direction: column;
+    width: min(380px, 100%);
+    background: var(--cor-fundo);
+    transform: translateX(-100%);
+    transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .filtros.aberto {
+    transform: none;
+  }
+
+  .filtros__topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--cor-borda);
+  }
+
+  .filtros__topo h2 {
+    font-size: 1.125rem;
+    margin: 0;
+  }
+
+  .filtros__corpo {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 20px;
+  }
+
+  .filtros__rodape {
+    display: block;
+    padding: 16px 20px;
+    border-top: 1px solid var(--cor-borda);
+  }
+
+  .filtro {
+    border-bottom: 1px solid var(--cor-borda);
+  }
+
+  .filtro summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    font-family: var(--fonte-titulo);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .filtro summary::after {
+    content: "+";
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: 1;
+    transition: transform var(--transicao);
+  }
+
+  .filtro[open] summary::after {
+    transform: rotate(45deg);
+  }
+
+  .filtro__corpo {
+    padding-bottom: 18px;
+  }
+}
+
+@media (max-width: 720px) {
+  .loja .grelha-produtos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ordenar label,
+  .barra-loja__contagem {
+    display: none;
+  }
+
+  .barra-loja {
+    gap: 10px;
+  }
+}

@@ -1,0 +1,395 @@
+/* ==========================================================
+   RJ SPORTS — Acompanhar encomenda
+   ========================================================== */
+
+.pagina-acompanhar {
+  padding-top: clamp(28px, 4vw, 48px);
+  padding-bottom: var(--secao-espaco);
+}
+
+.acompanhar {
+  display: grid;
+  grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: start;
+}
+
+.acompanhar__topo h1 {
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  margin-bottom: 10px;
+}
+
+.acompanhar__topo p {
+  max-width: 560px;
+  color: var(--cor-texto-suave);
+  margin-bottom: clamp(24px, 3vw, 36px);
+}
+
+/* ---------- Formulário de pesquisa ---------- */
+.pesquisa-encomenda {
+  display: grid;
+  gap: 16px;
+  padding: clamp(20px, 2.5vw, 28px);
+  border-radius: var(--raio-lg);
+  background: var(--cor-fundo-alt);
+}
+
+.pesquisa-encomenda .campo input {
+  text-transform: uppercase;
+}
+
+.pesquisa-encomenda .campo input[type="tel"] {
+  text-transform: none;
+}
+
+.campo-telefone {
+  display: flex;
+  align-items: stretch;
+}
+
+.campo-telefone span {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border: 1px solid var(--cor-borda);
+  border-right: 0;
+  border-radius: var(--raio) 0 0 var(--raio);
+  background: #fff;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.campo-telefone input {
+  border-radius: 0 var(--raio) var(--raio) 0;
+}
+
+.campo__erro {
+  display: none;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #d0021b;
+}
+
+.campo.invalido input,
+.campo.invalido .campo-telefone span {
+  border-color: #d0021b;
+}
+
+.campo.invalido .campo__erro {
+  display: block;
+}
+
+/* encomendas guardadas neste dispositivo */
+.recentes {
+  margin-top: 24px;
+}
+
+.recentes h2 {
+  font-size: 0.8125rem;
+  letter-spacing: 0.14em;
+  margin-bottom: 12px;
+}
+
+.recentes__lista {
+  display: grid;
+  gap: 8px;
+}
+
+.recente {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: #fff;
+  text-align: left;
+  transition: border-color var(--transicao);
+}
+
+.recente:hover,
+.recente.ativo {
+  border-color: var(--cor-destaque);
+}
+
+.recente strong {
+  display: block;
+  font-family: var(--fonte-titulo);
+  letter-spacing: 0.04em;
+}
+
+.recente span {
+  font-size: 0.8125rem;
+  color: var(--cor-texto-suave);
+}
+
+/* ---------- Resultado ---------- */
+.resultado {
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-lg);
+  overflow: hidden;
+}
+
+.resultado__topo {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: clamp(20px, 2.5vw, 28px);
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.resultado__topo h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin: 0 0 4px;
+}
+
+.resultado__data {
+  font-size: 0.875rem;
+  color: var(--cor-texto-suave);
+}
+
+.estado-etiqueta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--cor-destaque);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+/* certinho azul antes do estado */
+.estado-etiqueta::before {
+  content: "";
+  width: 10px;
+  height: 5px;
+  margin-top: -3px;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+}
+
+/* linha do tempo */
+.linha-tempo {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: clamp(24px, 3vw, 32px) clamp(20px, 2.5vw, 28px);
+  border-bottom: 1px solid var(--cor-borda);
+  counter-reset: passo;
+}
+
+.passo-estado {
+  position: relative;
+  padding-top: 44px;
+  text-align: center;
+  font-size: 0.8125rem;
+}
+
+/* traço entre passos */
+.passo-estado::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: var(--cor-borda);
+}
+
+.passo-estado:last-child::before {
+  display: none;
+}
+
+.passo-estado.feito::before {
+  background: var(--cor-destaque);
+}
+
+/* bolinha */
+.passo-estado::after {
+  counter-increment: passo;
+  content: counter(passo);
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-left: -16px;
+  border: 2px solid var(--cor-borda);
+  border-radius: 50%;
+  background: #fff;
+  font-weight: 700;
+  color: var(--cor-texto-suave);
+}
+
+.passo-estado.feito::after,
+.passo-estado.atual::after {
+  border-color: var(--cor-destaque);
+  background: var(--cor-destaque);
+  color: #fff;
+}
+
+.passo-estado.feito::after {
+  content: "✓";
+}
+
+.passo-estado.atual::after {
+  box-shadow: 0 0 0 5px rgba(0, 87, 255, 0.15);
+}
+
+.passo-estado strong {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 0.875rem;
+}
+
+.passo-estado span {
+  display: block;
+  padding: 0 6px;
+  color: var(--cor-texto-suave);
+  line-height: 1.4;
+}
+
+/* detalhes */
+.resultado__corpo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  padding: clamp(20px, 2.5vw, 28px);
+}
+
+.resultado__corpo h3 {
+  font-size: 0.8125rem;
+  letter-spacing: 0.14em;
+  margin-bottom: 12px;
+}
+
+.resultado__artigos {
+  display: grid;
+  gap: 8px;
+  font-size: 0.9375rem;
+}
+
+.resultado__artigo {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.resultado__artigo span:last-child {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.resultado__total {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--cor-borda);
+  font-weight: 700;
+}
+
+.resultado__entrega {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.resultado__rodape {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px clamp(20px, 2.5vw, 28px);
+  background: var(--cor-fundo-alt);
+  font-size: 0.875rem;
+}
+
+.btn--whatsapp {
+  background: #fff;
+  border-color: var(--cor-borda);
+  color: var(--cor-texto);
+}
+
+.btn--whatsapp svg {
+  color: #25d366;
+}
+
+.btn--whatsapp:hover {
+  background: #fff;
+  border-color: var(--cor-escuro);
+  color: var(--cor-texto);
+}
+
+/* estado inicial e "não encontrada" */
+.resultado-vazio {
+  display: grid;
+  place-items: center;
+  min-height: 320px;
+  padding: 32px;
+  border: 1px dashed var(--cor-borda);
+  border-radius: var(--raio-lg);
+  text-align: center;
+}
+
+.resultado-vazio svg {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  color: var(--cor-destaque);
+}
+
+.resultado-vazio h2 {
+  font-size: 1.375rem;
+}
+
+.resultado-vazio p {
+  max-width: 400px;
+  margin: 0 auto 20px;
+  color: var(--cor-texto-suave);
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 900px) {
+  .acompanhar {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .resultado__corpo {
+    grid-template-columns: 1fr;
+  }
+
+  /* linha do tempo vertical no telemóvel */
+  .linha-tempo {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .passo-estado {
+    padding: 4px 0 0 48px;
+    text-align: left;
+  }
+
+  .passo-estado::before {
+    top: 34px;
+    left: 15px;
+    width: 2px;
+    height: calc(100% - 16px);
+  }
+
+  .passo-estado::after {
+    left: 0;
+    margin-left: 0;
+  }
+
+  .passo-estado span {
+    padding: 0;
+  }
+}

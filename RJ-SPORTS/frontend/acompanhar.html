@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acompanhar encomenda — RJ Sports</title>
+  <meta name="description" content="Veja o estado da sua encomenda RJ Sports.">
+
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#0057ff">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Russo+One&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/acompanhar.css">
+</head>
+<body>
+
+  <div id="cabecalho"></div>
+
+  <main class="container pagina-acompanhar">
+    <div class="acompanhar__topo">
+      <h1>Acompanhar encomenda</h1>
+      <p>Escreva o número da encomenda (ex.: RJS-123456) e o telefone que usou ao encomendar.</p>
+    </div>
+
+    <div class="acompanhar">
+      <div>
+        <form class="pesquisa-encomenda" id="form-acompanhar" novalidate>
+          <div class="campo" data-campo="numero">
+            <label for="numero">Número da encomenda</label>
+            <input type="text" id="numero" name="numero" placeholder="RJS-123456" autocomplete="off" maxlength="12">
+            <span class="campo__erro">Escreva o número que recebeu ao encomendar.</span>
+          </div>
+          <div class="campo" data-campo="telefone">
+            <label for="telefone">Telefone</label>
+            <div class="campo-telefone">
+              <span>+258</span>
+              <input type="tel" id="telefone" name="telefone" inputmode="tel" placeholder="84 123 4567" autocomplete="tel-national" maxlength="13">
+            </div>
+            <span class="campo__erro">Número inválido. Ex.: 84 123 4567</span>
+          </div>
+          <button type="submit" class="btn btn--destaque btn--bloco">Ver estado</button>
+        </form>
+
+        <div class="recentes" id="recentes" hidden>
+          <h2>Encomendas feitas neste dispositivo</h2>
+          <div class="recentes__lista" id="lista-recentes"></div>
+        </div>
+      </div>
+
+      <!-- Resultado (preenchido por js/acompanhar.js) -->
+      <section id="resultado" aria-live="polite"></section>
+    </div>
+  </main>
+
+  <div id="rodape"></div>
+
+  <!-- Catálogo do servidor (se o site estiver a correr com o backend) -->
+  <script src="/api/catalogo.js"></script>
+  <script src="js/produtos.js"></script>
+  <script src="js/carrinho.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/acompanhar.js"></script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+// ==========================================================
+// RJ SPORTS — modelo da base de dados (Prisma)
+// Desenvolvimento: SQLite. Para produção, mude o provider para
+// "postgresql" (ou "mysql") e o DATABASE_URL no .env.
+// Valores em meticais (MT) guardados como inteiros.
+// Listas (tamanhos, público, idades) guardadas como texto JSON.
+// ==========================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  email     String   @unique
+  hash      String
+  inicial   Boolean  @default(true) // ainda com a palavra-passe de origem
+  criadoEm  DateTime @default(now())
+}
+
+model Categoria {
+  id        String    @id
+  nome      String
+  descricao String?
+  ordem     Int       @default(0)
+  produtos  Produto[]
+}
+
+model Fornecedor {
+  id       String    @id
+  nome     String
+  contacto String?
+  telefone String?
+  email    String?
+  cidade   String?
+  prazo    String?
+  notas    String?
+  produtos Produto[]
+}
+
+model Produto {
+  id           String      @id
+  sku          String?
+  nome         String
+  descricao    String?
+  categoriaId  String
+  categoria    Categoria   @relation(fields: [categoriaId], references: [id])
+  preco        Int
+  precoAntigo  Int?
+  custo        Int?
+  stock        Int         @default(0)
+  fornecedorId String?
+  fornecedor   Fornecedor? @relation(fields: [fornecedorId], references: [id], onDelete: SetNull)
+  imagem       String?
+  tamanhos     String      @default("[]")
+  publico      String      @default("[]")
+  idades       String      @default("[]")
+  destaque     Boolean     @default(false)
+  novo         Boolean     @default(false)
+  ativo        Boolean     @default(true)
+  criadoEm     DateTime    @default(now())
+  atualizadoEm DateTime    @updatedAt
+}
+
+model Encomenda {
+  numero           String            @id
+  data             DateTime          @default(now())
+  estado           String            @default("Recebida")
+  clienteNome      String
+  clienteTelefone  String
+  clienteTelefone2 String?
+  provincia        String
+  cidade           String
+  bairro           String
+  endereco         String
+  observacoes      String?
+  pagamento        String
+  total            Int
+  taxaEntrega      Int?
+  pedidoFornecedor Boolean           @default(false)
+  notas            String?
+  itens            EncomendaItem[]
+  historico        HistoricoEstado[]
+
+  @@index([clienteTelefone])
+  @@index([estado])
+}
+
+model EncomendaItem {
+  id              Int       @id @default(autoincrement())
+  encomendaNumero String
+  encomenda       Encomenda @relation(fields: [encomendaNumero], references: [numero], onDelete: Cascade)
+  produtoId       String?
+  nome            String
+  tamanho         String?
+  quantidade      Int
+  preco           Int
+  custo           Int?
+  subtotal        Int
+}
+
+model HistoricoEstado {
+  id              Int       @id @default(autoincrement())
+  encomendaNumero String
+  encomenda       Encomenda @relation(fields: [encomendaNumero], references: [numero], onDelete: Cascade)
+  estado          String
+  data            DateTime  @default(now())
+  nota            String?
+}
+
+model Zona {
+  id        String  @id
+  provincia String  @unique
+  taxa      Int?
+  prazo     String?
+  ativa     Boolean @default(true)
+}
+
+model Campanha {
+  id     String  @id
+  nome   String
+  codigo String? @unique
+  tipo   String  @default("percentagem") // percentagem | valor
+  valor  Int
+  minimo Int?
+  inicio String? // AAAA-MM-DD
+  fim    String?
+  ativa  Boolean @default(true)
+}
+
+model Despesa {
+  id        String  @id
+  data      String // AAAA-MM-DD
+  descricao String
+  categoria String?
+  valor     Int
+}
+
+// Configurações simples (ex.: chave "loja" com os dados de contacto em JSON)
+model Configuracao {
+  chave String @id
+  valor String
+}

@@ -1,0 +1,36 @@
+# ==========================================================
+# RJ SPORTS — produção num servidor (VPS) com Docker
+#   1) cp .env.producao.example .env.producao  (e preencher)
+#   2) docker compose up -d --build
+# A loja fica em https://SEU-DOMINIO (HTTPS automático).
+# ==========================================================
+
+services:
+  loja:
+    build: .
+    restart: unless-stopped
+    env_file: .env.producao
+    volumes:
+      - dados:/dados # base de dados, fotos e cópias de segurança
+    expose:
+      - "3000"
+
+  caddy:
+    image: caddy:2.8-alpine
+    restart: unless-stopped
+    env_file: .env.producao
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_dados:/data
+      - caddy_config:/config
+    depends_on:
+      - loja
+
+volumes:
+  dados:
+  caddy_dados:
+  caddy_config:

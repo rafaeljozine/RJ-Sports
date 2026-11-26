@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "frontend",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "5500", "--directory", "RJ-SPORTS/frontend"],
+      "port": 5500,
+      "autoPort": false
+    },
+    {
+      "name": "backend",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["RJ-SPORTS/backend/src/server.js"],
+      "port": 3000,
+      "autoPort": false
+    }
+  ]
+}

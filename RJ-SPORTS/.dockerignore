@@ -1,0 +1,13 @@
+# Não entram na imagem Docker
+**/node_modules
+**/.env
+**/.env.*
+!**/.env.example
+backend/prisma/*.db
+backend/prisma/*.db-journal
+backend/uploads
+backend/backups
+.git
+.gitignore
+**/*.log
+README.md

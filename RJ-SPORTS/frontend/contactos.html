@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contactos — RJ Sports</title>
+  <meta name="description" content="Fale com a RJ Sports por WhatsApp, telefone ou redes sociais.">
+
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#0057ff">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="RJ Sports">
+  <meta property="og:locale" content="pt_PT">
+  <meta property="og:title" content="Contactos — RJ Sports">
+  <meta property="og:description" content="Fale com a RJ Sports por WhatsApp ou telefone. Respondemos rapidamente.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Russo+One&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/institucional.css">
+</head>
+<body>
+
+  <div id="cabecalho"></div>
+
+  <main class="container pagina-institucional">
+    <div class="institucional__topo">
+      <span class="sobretitulo">Contactos</span>
+      <h1>Fale connosco</h1>
+      <p>Tem dúvidas sobre tamanhos, entregas ou uma encomenda? A forma mais rápida de nos contactar é pelo WhatsApp.</p>
+    </div>
+
+    <div class="contactos">
+      <!-- Canais (preenchidos com os dados de js/main.js) -->
+      <div>
+        <div class="cartoes-contacto" id="cartoes-contacto"></div>
+        <div class="horario">
+          <h3>Horário de atendimento</h3>
+          <dl id="horario"></dl>
+        </div>
+      </div>
+
+      <!-- Formulário: envia a mensagem pelo WhatsApp -->
+      <form class="form-contacto" id="form-contacto" novalidate>
+        <h2>Envie uma mensagem</h2>
+        <p>Escreva a sua mensagem e carregue em enviar: abrimos o WhatsApp com tudo já escrito.</p>
+        <div class="grelha-campos">
+          <div class="campo" data-campo="nome">
+            <label for="contacto-nome">Nome</label>
+            <input type="text" id="contacto-nome" autocomplete="name">
+            <span class="campo__erro">Escreva o seu nome.</span>
+          </div>
+          <div class="campo" data-campo="assunto">
+            <label for="contacto-assunto">Assunto</label>
+            <select id="contacto-assunto">
+              <option>Dúvida sobre um produto</option>
+              <option>Encomenda feita</option>
+              <option>Entregas</option>
+              <option>Tamanhos</option>
+              <option>Outro assunto</option>
+            </select>
+          </div>
+          <div class="campo campo--inteiro" data-campo="encomenda">
+            <label for="contacto-encomenda">Número da encomenda <span class="opcional" style="font-weight:400">(se tiver)</span></label>
+            <input type="text" id="contacto-encomenda" placeholder="RJS-123456" autocomplete="off" maxlength="12">
+          </div>
+          <div class="campo campo--inteiro" data-campo="mensagem">
+            <label for="contacto-mensagem">Mensagem</label>
+            <textarea id="contacto-mensagem" placeholder="Como podemos ajudar?"></textarea>
+            <span class="campo__erro">Escreva a sua mensagem.</span>
+          </div>
+        </div>
+        <button type="submit" class="btn btn--destaque btn--bloco" id="enviar-contacto">Enviar pelo WhatsApp</button>
+        <p class="form-contacto__nota">Respondemos no horário de atendimento.</p>
+      </form>
+    </div>
+
+    <!-- Perguntas frequentes -->
+    <section class="bloco">
+      <div class="secao__topo">
+        <div>
+          <span class="sobretitulo">Ajuda</span>
+          <h2>Perguntas frequentes</h2>
+        </div>
+      </div>
+      <div class="perguntas">
+        <details>
+          <summary>Como pago a minha encomenda?</summary>
+          <p>Paga apenas quando recebe o produto, em numerário ou por M-Pesa / e-Mola. Não pedimos nenhum pagamento antecipado nem cartão.</p>
+        </details>
+        <details>
+          <summary>Quanto custa a entrega?</summary>
+          <p>A taxa de entrega depende da sua província e cidade. Depois de encomendar, ligamos para confirmar a encomenda e dizer-lhe o valor exato antes de enviar.</p>
+        </details>
+        <details>
+          <summary>Quanto tempo demora a entrega?</summary>
+          <p>O prazo depende da zona de entrega. Indicamos a data prevista quando ligamos para confirmar a encomenda.</p>
+        </details>
+        <details>
+          <summary>Entregam em todas as províncias?</summary>
+          <p>Sim, entregamos em todo Moçambique. Se tiver dúvidas sobre a sua zona, fale connosco pelo WhatsApp.</p>
+        </details>
+        <details>
+          <summary>Como sei qual tamanho escolher?</summary>
+          <p>Se não tiver a certeza do tamanho, envie-nos uma mensagem com o produto e as suas medidas ou o tamanho que costuma usar, e ajudamos a escolher.</p>
+        </details>
+        <details>
+          <summary>Como acompanho a minha encomenda?</summary>
+          <p>Use a página <a href="acompanhar.html" style="text-decoration:underline">Acompanhar encomenda</a> com o número que recebeu ao encomendar, ou pergunte-nos pelo WhatsApp.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <div id="rodape"></div>
+
+  <!-- Catálogo do servidor (se o site estiver a correr com o backend) -->
+  <script src="/api/catalogo.js"></script>
+  <script src="js/produtos.js"></script>
+  <script src="js/carrinho.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    (function () {
+      var l = RJS.loja;
+      var e = RJS.escapar;
+      var whatsapp = RJS.iconesCompra.whatsapp;
+      var seta = '<svg class="cartao-contacto__seta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+      var telefone = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>';
+      var instagram = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg>';
+      var facebook = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7.5h2.5l.4-3h-2.9V8.6c0-.9.3-1.5 1.5-1.5h1.5V4.4c-.3 0-1.2-.1-2.2-.1-2.2 0-3.7 1.3-3.7 3.8v2.4H8v3h2.6V21h2.9Z"/></svg>';
+      var local = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>';
+
+      function cartao(href, icone, classeIcone, rotulo, valor, externo) {
+        var tag = href ? "a" : "div";
+        return (
+          "<" + tag + ' class="cartao-contacto"' + (href ? ' href="' + href + '"' : "") +
+          (externo ? ' target="_blank" rel="noopener"' : "") + ">" +
+          '<span class="cartao-contacto__icone' + classeIcone + '">' + icone + "</span>" +
+          "<div><strong>" + rotulo + "</strong><span>" + e(valor) + "</span></div>" +
+          (href ? seta : "<span></span>") +
+          "</" + tag + ">"
+        );
+      }
+
+      document.getElementById("cartoes-contacto").innerHTML =
+        cartao("https://wa.me/" + l.whatsapp, whatsapp, " cartao-contacto__icone--whatsapp", "WhatsApp", l.telefone, true) +
+        cartao("tel:" + l.telefone.replace(/\s/g, ""), telefone, "", "Telefone", l.telefone, false) +
+        cartao(l.instagram, instagram, "", "Instagram", "@" + l.instagram.split("/").pop(), true) +
+        cartao(l.facebook, facebook, "", "Facebook", l.facebook.replace(/^https?:\/\//, ""), true) +
+        cartao("", local, "", "Localização", l.cidade + " · Entregas em todo o país", false);
+
+      document.getElementById("horario").innerHTML = (l.horario || []).map(function (h) {
+        return "<dt>" + e(h[0]) + "</dt><dd>" + e(h[1]) + "</dd>";
+      }).join("");
+
+      /* Formulário → WhatsApp */
+      var form = document.getElementById("form-contacto");
+
+      function valor(id) {
+        return document.getElementById(id).value.trim();
+      }
+
+      function marcar(campo, ok) {
+        form.querySelector('[data-campo="' + campo + '"]').classList.toggle("invalido", !ok);
+        return ok;
+      }
+
+      form.addEventListener("input", function (ev) {
+        var bloco = ev.target.closest(".campo.invalido");
+        if (bloco) bloco.classList.remove("invalido");
+      });
+
+      form.addEventListener("submit", function (ev) {
+        ev.preventDefault();
+        var ok = marcar("nome", valor("contacto-nome").length >= 2);
+        ok = marcar("mensagem", valor("contacto-mensagem").length >= 3) && ok;
+        if (!ok) {
+          form.querySelector(".campo.invalido input, .campo.invalido textarea").focus();
+          return;
+        }
+
+        var linhas = [
+          "Olá RJ Sports! Sou " + valor("contacto-nome") + ".",
+          "Assunto: " + valor("contacto-assunto")
+        ];
+        if (valor("contacto-encomenda")) linhas.push("Encomenda: " + valor("contacto-encomenda").toUpperCase());
+        linhas.push("", valor("contacto-mensagem"));
+
+        window.open("https://wa.me/" + l.whatsapp + "?text=" + encodeURIComponent(linhas.join("\n")), "_blank", "noopener");
+        RJS.aviso("A abrir o WhatsApp…");
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+/* ==========================================================
+   RJ SPORTS — Rodapé
+   ========================================================== */
+
+.rodape {
+  background: var(--cor-escuro);
+  color: #fff;
+  padding: clamp(56px, 7vw, 96px) 0 28px;
+}
+
+.rodape__grelha {
+  display: grid;
+  grid-template-columns: 1.6fr repeat(3, 1fr);
+  gap: 40px;
+  padding-bottom: 48px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.rodape .logotipo {
+  font-size: 2rem;
+  margin-bottom: 16px;
+  display: inline-block;
+}
+
+.rodape__descricao {
+  max-width: 340px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9375rem;
+}
+
+.rodape h3 {
+  font-size: 0.8125rem;
+  letter-spacing: 0.14em;
+  margin-bottom: 18px;
+}
+
+.rodape__links li + li {
+  margin-top: 10px;
+}
+
+.rodape__links a,
+.rodape__links span {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9375rem;
+  transition: color var(--transicao);
+}
+
+.rodape__links a:hover {
+  color: #fff;
+}
+
+.rodape__base {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 24px;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.rodape__sociais {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.rodape__sociais a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  color: #fff;
+  transition: background var(--transicao), border-color var(--transicao), transform var(--transicao);
+}
+
+.rodape__sociais a:hover {
+  background: var(--cor-destaque);
+  border-color: var(--cor-destaque);
+  transform: translateY(-2px);
+}
+
+.rodape__sociais svg {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 900px) {
+  .rodape__grelha {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .rodape__marca {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .rodape__grelha {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}

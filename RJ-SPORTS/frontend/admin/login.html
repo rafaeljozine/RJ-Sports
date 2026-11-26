@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar — Painel RJ Sports</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#0057ff">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Russo+One&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+  <main class="pagina-login">
+    <div class="login__lado" aria-hidden="true">
+      <img src="../assets/images/banners/ajuda.jpg" alt="" onerror="this.remove()">
+      <div class="login__lado-texto">
+        <h2>Painel RJ Sports</h2>
+        <p>Gira produtos, encomendas, entregas e finanças da loja num só lugar.</p>
+      </div>
+    </div>
+
+    <div class="login__formulario">
+      <div class="login__caixa">
+        <span class="logotipo">R<span>J.</span>Sports</span>
+        <h1>Entrar no painel</h1>
+        <p>Acesso reservado à equipa da RJ Sports.</p>
+
+        <form id="form-login" novalidate>
+          <div class="campo">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="username" required>
+          </div>
+          <div class="campo">
+            <label for="palavraPasse">Palavra-passe</label>
+            <input type="password" id="palavraPasse" name="palavraPasse" autocomplete="current-password" required>
+          </div>
+          <p class="login__erro" id="login-erro" role="alert" hidden>Email ou palavra-passe incorretos.</p>
+          <button type="submit" class="btn btn--destaque btn--bloco">Entrar</button>
+        </form>
+
+        <a class="login__voltar" href="../index.html">← Voltar à loja</a>
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/produtos.js"></script>
+  <!-- Dados e sessão do servidor (se o site estiver a correr com o backend) -->
+  <script src="/api/admin/dados.js"></script>
+  <script src="../js/admin/auth.js"></script>
+</body>
+</html>

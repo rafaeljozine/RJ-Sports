@@ -1,0 +1,4 @@
+# Scripts de servidor sempre com fim de linha Unix (senão não correm no Linux)
+*.sh text eol=lf
+Caddyfile text eol=lf
+Dockerfile text eol=lf

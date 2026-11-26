@@ -1,0 +1,26 @@
+# Dependências
+node_modules/
+
+# Segredos e configuração local (nunca enviar)
+.env
+.env.*
+!.env.example
+!.env.producao.example
+
+# Base de dados de desenvolvimento (SQLite)
+backend/prisma/*.db
+backend/prisma/*.db-journal
+
+# Cópias de segurança
+backend/backups/
+
+# Fotos enviadas no painel (ficam no servidor, não no Git)
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Sistema / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log

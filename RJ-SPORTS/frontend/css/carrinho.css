@@ -1,0 +1,272 @@
+/* ==========================================================
+   RJ SPORTS — Página do carrinho
+   (o resumo lateral é partilhado com o checkout)
+   ========================================================== */
+
+.pagina-carrinho {
+  padding-top: clamp(28px, 4vw, 48px);
+  padding-bottom: var(--secao-espaco);
+}
+
+.pagina-carrinho h1 {
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  margin-bottom: clamp(20px, 3vw, 32px);
+}
+
+.pagina-carrinho h1 span {
+  font-size: 0.4em;
+  vertical-align: middle;
+  color: var(--cor-texto-suave);
+  letter-spacing: 0;
+}
+
+.carrinho {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: clamp(24px, 4vw, 56px);
+  align-items: start;
+}
+
+/* ---------- Lista de artigos ---------- */
+.carrinho__cabecalho {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 130px 120px;
+  gap: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--cor-borda);
+  font-family: var(--fonte-titulo);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.carrinho__cabecalho span:last-child {
+  text-align: right;
+}
+
+.item-carrinho {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 130px 120px;
+  gap: 20px;
+  align-items: center;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.item-carrinho__produto {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+}
+
+.item-carrinho__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--raio);
+  background: var(--cor-fundo-alt);
+}
+
+.item-carrinho__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  color: transparent;
+  font-size: 0;
+}
+
+.item-carrinho__media .cartao-produto__marcador {
+  font-size: 1.25rem;
+}
+
+.item-carrinho__nome {
+  display: block;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-bottom: 4px;
+}
+
+.item-carrinho__nome:hover {
+  text-decoration: underline;
+}
+
+.item-carrinho__detalhe {
+  font-size: 0.875rem;
+  color: var(--cor-texto-suave);
+}
+
+.item-carrinho__remover {
+  margin-top: 8px;
+  font-size: 0.8125rem;
+  color: var(--cor-texto-suave);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.item-carrinho__remover:hover {
+  color: var(--cor-destaque);
+}
+
+.item-carrinho__total {
+  font-weight: 700;
+  text-align: right;
+}
+
+.carrinho__continuar {
+  display: inline-flex;
+  margin-top: 24px;
+}
+
+/* ---------- Resumo (carrinho e checkout) ---------- */
+.resumo {
+  position: sticky;
+  top: calc(var(--altura-header) + 20px);
+  padding: clamp(20px, 2.5vw, 28px);
+  background: var(--cor-fundo-alt);
+  border-radius: var(--raio-lg);
+}
+
+.resumo h2 {
+  font-size: 1.25rem;
+  margin-bottom: 18px;
+}
+
+.resumo__linha {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 6px 0;
+  font-size: 0.9375rem;
+}
+
+.resumo__linha span:last-child {
+  font-weight: 600;
+  text-align: right;
+}
+
+.resumo__linha--total {
+  margin-top: 10px;
+  padding-top: 16px;
+  border-top: 1px solid var(--cor-borda);
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.resumo__linha--total span:last-child {
+  font-weight: 800;
+}
+
+.resumo__nota {
+  display: flex;
+  gap: 10px;
+  margin: 16px 0 20px;
+  padding: 12px 14px;
+  border-radius: var(--raio);
+  background: #fff;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.resumo__nota svg {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: var(--cor-destaque);
+}
+
+.resumo__botoes {
+  display: grid;
+  gap: 10px;
+}
+
+.resumo__botoes .btn {
+  padding: 0 14px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.btn--whatsapp {
+  background: #fff;
+  border-color: var(--cor-borda);
+  color: var(--cor-texto);
+}
+
+.btn--whatsapp svg {
+  width: 20px;
+  height: 20px;
+  color: #25d366;
+}
+
+.btn--whatsapp:hover {
+  background: #fff;
+  border-color: var(--cor-escuro);
+  color: var(--cor-texto);
+}
+
+/* ---------- Carrinho vazio ---------- */
+.carrinho-vazio {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: clamp(40px, 8vw, 96px) 0;
+  text-align: center;
+}
+
+.carrinho-vazio svg {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 20px;
+  color: var(--cor-destaque);
+}
+
+.carrinho-vazio h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+.carrinho-vazio p {
+  color: var(--cor-texto-suave);
+  margin-bottom: 24px;
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 960px) {
+  .carrinho {
+    grid-template-columns: 1fr;
+  }
+
+  .resumo {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .carrinho__cabecalho {
+    display: none;
+  }
+
+  .item-carrinho {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "produto produto"
+      "qtd total";
+    gap: 14px;
+  }
+
+  .item-carrinho__produto {
+    grid-area: produto;
+    grid-template-columns: 84px minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .item-carrinho .quantidade {
+    grid-area: qtd;
+    justify-self: start;
+  }
+
+  .item-carrinho__total {
+    grid-area: total;
+  }
+}

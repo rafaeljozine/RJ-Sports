@@ -1,0 +1,560 @@
+/* ==========================================================
+   RJ SPORTS — Página inicial
+   ========================================================== */
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: min(88vh, 820px);
+  padding: clamp(40px, 6vw, 80px) 0;
+  overflow: hidden;
+  color: #fff;
+  background:
+    radial-gradient(120% 80% at 85% 10%, rgba(0, 87, 255, 0.55) 0%, rgba(0, 87, 255, 0) 55%),
+    linear-gradient(160deg, #1c1c1c 0%, #0b0b0b 100%);
+}
+
+/* ---------- Slide de fotos ---------- */
+.hero__slides {
+  position: absolute;
+  inset: 0;
+}
+
+.hero__slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  overflow: hidden;
+  /* transição suave entre fotos (mantém-se mesmo com animações reduzidas) */
+  transition: opacity 1.2s ease-in-out !important;
+}
+
+.hero__slide.ativo {
+  opacity: 1;
+}
+
+.hero__slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--posicao, center);
+  color: transparent;
+  font-size: 0;
+  /* aproximação lenta enquanto a foto está visível */
+  transform: scaleX(var(--espelho, 1)) scale(1.08);
+  transition: transform 7s ease-out;
+}
+
+.hero__slide.ativo img {
+  transform: scaleX(var(--espelho, 1)) scale(1);
+}
+
+.hero__slide--espelhar {
+  --espelho: -1;
+}
+
+@media (max-width: 760px) {
+  .hero__slide img {
+    object-position: var(--posicao-movel, var(--posicao, center));
+  }
+}
+
+/* ---------- Controlos do slide ---------- */
+.hero__controlos {
+  position: absolute;
+  right: var(--gutter);
+  bottom: clamp(24px, 4vw, 48px);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.hero__controlos[hidden] {
+  display: none;
+}
+
+.hero__seta {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  color: #fff;
+  transition: background var(--transicao), border-color var(--transicao), color var(--transicao);
+}
+
+.hero__seta:hover {
+  background: #fff;
+  border-color: #fff;
+  color: var(--cor-escuro);
+}
+
+.hero__seta svg {
+  width: 18px;
+  height: 18px;
+}
+
+.hero__pontos {
+  display: flex;
+  gap: 6px;
+}
+
+.hero__ponto {
+  position: relative;
+  width: 18px;
+  height: 16px;
+}
+
+.hero__ponto span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.4);
+  overflow: hidden;
+}
+
+/* barra azul que enche durante o tempo de cada foto */
+.hero__ponto span::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--cor-destaque);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.hero__ponto.ativo span {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.hero__ponto.ativo span::after {
+  animation: hero-progresso var(--intervalo, 6000ms) linear forwards !important;
+}
+
+.hero.pausado .hero__ponto.ativo span::after {
+  animation-play-state: paused !important;
+}
+
+@keyframes hero-progresso {
+  to { transform: scaleX(1); }
+}
+
+/* no telemóvel: só os pontos, no topo (desliza-se com o dedo) */
+@media (max-width: 760px) {
+  /* o texto ocupa a largura toda: escurece mais a foto para se ler bem */
+  section.hero::after {
+    background:
+      linear-gradient(0deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.45) 55%, rgba(0, 0, 0, 0.25) 100%);
+  }
+
+  .hero__controlos {
+    top: 20px;
+    bottom: auto;
+  }
+
+  .hero__seta {
+    display: none;
+  }
+
+  .hero__ponto {
+    width: 14px;
+  }
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* escurece o lado esquerdo (texto) e a base, deixando a foto viva à direita */
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.45) 45%, rgba(0, 0, 0, 0) 75%),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 50%);
+}
+
+
+.hero__marca-agua {
+  position: absolute;
+  right: -2vw;
+  top: 6%;
+  font-family: var(--fonte-titulo);
+  font-size: clamp(8rem, 26vw, 24rem);
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  color: rgba(255, 255, 255, 0.05);
+  user-select: none;
+  pointer-events: none;
+}
+
+.hero__conteudo {
+  position: relative;
+  z-index: 1;
+}
+
+.hero h1 {
+  margin-bottom: 0.35em;
+}
+
+.hero h1 em {
+  font-style: normal;
+  color: var(--cor-destaque);
+}
+
+.hero__texto {
+  max-width: 520px;
+  font-size: clamp(1rem, 1.4vw, 1.125rem);
+  color: rgba(255, 255, 255, 0.95);
+  margin-bottom: 2rem;
+}
+
+.hero__botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ---------- Faixa de benefícios ---------- */
+.beneficios {
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.beneficios__grelha {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.beneficio {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 26px 20px;
+}
+
+.beneficio + .beneficio {
+  border-left: 1px solid var(--cor-borda);
+}
+
+.beneficio {
+  transition: background var(--transicao);
+}
+
+.beneficio svg {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), color var(--transicao);
+}
+
+/* Movimento leve ao passar o rato */
+.beneficio:hover {
+  background: #fafaf8;
+}
+
+.beneficio:hover svg {
+  color: var(--cor-destaque);
+  transform: translateY(-2px);
+}
+
+.beneficio strong {
+  display: block;
+  font-size: 0.875rem;
+}
+
+.beneficio span {
+  font-size: 0.8125rem;
+  color: var(--cor-texto-suave);
+}
+
+/* ---------- Categorias ---------- */
+.grelha-categorias {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(12px, 2vw, 24px);
+}
+
+.cartao-categoria {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  aspect-ratio: 3 / 4;
+  padding: clamp(16px, 2vw, 28px);
+  overflow: hidden;
+  border-radius: var(--raio);
+  color: #fff;
+  isolation: isolate;
+}
+
+.cartao-categoria img {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.cartao-categoria::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0) 55%);
+}
+
+.cartao-categoria:hover img {
+  transform: scale(1.06);
+}
+
+.cartao-categoria h3 {
+  font-size: clamp(1.25rem, 2.4vw, 2rem);
+  margin: 0 0 4px;
+}
+
+.cartao-categoria p {
+  margin: 0;
+  font-size: 0.875rem;
+  opacity: 0.85;
+}
+
+.cartao-categoria__seta {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--cor-escuro);
+  transform: scale(0.8);
+  opacity: 0;
+  transition: transform var(--transicao), opacity var(--transicao);
+}
+
+.cartao-categoria:hover .cartao-categoria__seta {
+  transform: none;
+  opacity: 1;
+}
+
+/* Cores de fundo enquanto não há fotografias */
+.cartao-categoria--futebol { background: linear-gradient(160deg, #2b6b3f, #123a20); }
+.cartao-categoria--corrida { background: linear-gradient(160deg, #3d7bff, #0039b3); }
+.cartao-categoria--ginasio { background: linear-gradient(160deg, #3a3a3a, #111); }
+.cartao-categoria--acessorios { background: linear-gradient(160deg, #c9b89a, #7d6a4c); }
+
+/* ---------- Banner dividido ---------- */
+.banner-dividido {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 560px;
+  background: var(--cor-escuro);
+  color: #fff;
+}
+
+.banner-dividido__media {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(80% 80% at 30% 30%, rgba(0, 87, 255, 0.8), rgba(0, 87, 255, 0) 70%),
+    linear-gradient(200deg, #2a2a2a, #0e0e0e);
+}
+
+.banner-dividido__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.banner-dividido__texto {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: clamp(40px, 6vw, 96px);
+}
+
+.banner-dividido__texto p {
+  max-width: 440px;
+  color: rgba(255, 255, 255, 0.92);
+  margin-bottom: 2rem;
+}
+
+/* ---------- Como funciona ---------- */
+.passos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(16px, 3vw, 40px);
+  counter-reset: passo;
+}
+
+.passo {
+  padding-top: 24px;
+  border-top: 2px solid var(--cor-escuro);
+}
+
+.passo::before {
+  counter-increment: passo;
+  content: "0" counter(passo);
+  display: block;
+  font-family: var(--fonte-titulo);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--cor-destaque);
+  margin-bottom: 16px;
+}
+
+.passo p {
+  color: var(--cor-texto-suave);
+  margin: 0;
+}
+
+/* ---------- Chamada final ---------- */
+.chamada {
+  text-align: center;
+}
+
+.chamada h2 {
+  max-width: 780px;
+  margin: 0 auto 0.5em;
+}
+
+.chamada p {
+  max-width: 520px;
+  margin: 0 auto 2rem;
+}
+
+.chamada__botoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Foto de fundo com camada escura para o texto ler bem */
+.chamada {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  padding: clamp(80px, 11vw, 150px) 0;
+  background: #0b0b0b;
+  color: #fff;
+}
+
+.chamada__fundo {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  color: transparent;
+  font-size: 0;
+}
+
+.chamada::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.7) 100%);
+}
+
+.chamada h2 {
+  color: #fff;
+}
+
+.chamada p {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.chamada .btn--claro:hover {
+  background: transparent;
+  color: #fff;
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 1024px) {
+  .beneficios__grelha {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .beneficio:nth-child(3) {
+    border-left: 0;
+  }
+
+  .beneficio:nth-child(n + 3) {
+    border-top: 1px solid var(--cor-borda);
+  }
+
+  .grelha-categorias {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .hero {
+    min-height: 78vh;
+  }
+
+  .banner-dividido {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .banner-dividido__media {
+    aspect-ratio: 4 / 3;
+  }
+
+  .passos {
+    grid-template-columns: 1fr;
+  }
+
+  .secao__topo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .cartao-categoria {
+    aspect-ratio: 1 / 1.15;
+  }
+
+  .cartao-categoria__seta {
+    opacity: 1;
+    transform: none;
+    width: 34px;
+    height: 34px;
+  }
+}
+
+@media (max-width: 520px) {
+  .beneficios__grelha {
+    grid-template-columns: 1fr;
+  }
+
+  .beneficio + .beneficio {
+    border-left: 0;
+    border-top: 1px solid var(--cor-borda);
+  }
+
+  .beneficio {
+    padding: 18px 0;
+  }
+
+  .hero__botoes .btn {
+    flex: 1 1 100%;
+  }
+}

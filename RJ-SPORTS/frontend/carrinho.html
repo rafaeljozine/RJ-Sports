@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrinho — RJ Sports</title>
+  <meta name="robots" content="noindex">
+
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#0057ff">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Russo+One&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/carrinho.css">
+</head>
+<body>
+
+  <div id="cabecalho"></div>
+
+  <main class="container pagina-carrinho">
+    <h1>Carrinho <span id="contagem-carrinho"></span></h1>
+    <!-- Preenchido por js/carrinho.js -->
+    <div id="pagina-carrinho"></div>
+  </main>
+
+  <div id="rodape"></div>
+
+  <!-- Catálogo do servidor (se o site estiver a correr com o backend) -->
+  <script src="/api/catalogo.js"></script>
+  <script src="js/produtos.js"></script>
+  <script src="js/carrinho.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,404 @@
+/* ==========================================================
+   RJ SPORTS — Página de produto
+   ========================================================== */
+
+.pagina-produto {
+  padding-top: clamp(20px, 3vw, 32px);
+  padding-bottom: var(--secao-espaco);
+}
+
+.migalhas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.8125rem;
+  color: var(--cor-texto-suave);
+  margin-bottom: clamp(16px, 2.5vw, 28px);
+}
+
+.migalhas a:hover {
+  color: var(--cor-texto);
+  text-decoration: underline;
+}
+
+.migalhas span[aria-hidden] {
+  opacity: 0.5;
+}
+
+.produto {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(24px, 5vw, 72px);
+  align-items: start;
+}
+
+/* ---------- Imagem ---------- */
+.produto__media {
+  position: sticky;
+  top: calc(var(--altura-header) + 20px);
+}
+
+.produto__imagem {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--raio);
+  background: var(--cor-fundo-alt);
+  cursor: zoom-in;
+}
+
+.produto__imagem img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  color: transparent;
+  font-size: 0;
+  transition: transform 0.2s ease-out;
+}
+
+/* zoom suave ao passar o rato (a origem segue o cursor via JS) */
+.produto__imagem.zoom img {
+  transform: scale(1.6);
+}
+
+.produto__imagem .cartao-produto__etiquetas {
+  top: 16px;
+  left: 16px;
+}
+
+/* ---------- Informação ---------- */
+.produto__categoria {
+  display: inline-block;
+  font-family: var(--fonte-titulo);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cor-destaque);
+  margin-bottom: 10px;
+}
+
+.produto__info h1 {
+  font-size: clamp(1.875rem, 3.6vw, 2.875rem);
+  margin-bottom: 16px;
+}
+
+.produto__publico {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin: -6px 0 16px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.produto__publico span {
+  font-weight: 400;
+  color: var(--cor-texto-suave);
+}
+
+.produto__publico a:hover {
+  color: var(--cor-destaque);
+  text-decoration: underline;
+}
+
+.produto__preco {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.produto__preco .etiqueta {
+  align-self: center;
+}
+
+.produto__nota-pagamento {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: var(--cor-texto-suave);
+  margin-bottom: 24px;
+}
+
+.produto__nota-pagamento svg {
+  width: 18px;
+  height: 18px;
+  color: var(--cor-destaque);
+}
+
+.produto__resumo {
+  padding: 20px 0;
+  border-top: 1px solid var(--cor-borda);
+  margin: 0;
+  color: #1f1f1f;
+}
+
+/* ---------- Tamanho ---------- */
+.produto__bloco {
+  padding: 20px 0;
+  border-top: 1px solid var(--cor-borda);
+}
+
+.produto__rotulo {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.produto__rotulo strong {
+  font-weight: 700;
+}
+
+.produto__tamanhos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.produto__tamanhos .chip-tamanho span {
+  min-width: 54px;
+  height: 48px;
+}
+
+.produto__erro {
+  margin: 10px 0 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #d0021b;
+}
+
+.produto__tamanhos.abanar {
+  animation: abanar 0.4s;
+}
+
+@keyframes abanar {
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+/* ---------- Compra ---------- */
+.produto__compra {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+}
+
+.produto__compra .quantidade {
+  height: 52px;
+}
+
+.produto__compra .btn {
+  padding: 0 14px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.produto__compra .quantidade button {
+  width: 42px;
+  height: 50px;
+}
+
+.produto__botoes {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn--whatsapp {
+  background: #fff;
+  border-color: var(--cor-borda);
+  color: var(--cor-texto);
+}
+
+.btn--whatsapp svg {
+  width: 20px;
+  height: 20px;
+  color: #25d366;
+}
+
+.btn--whatsapp:hover {
+  background: #fff;
+  border-color: var(--cor-escuro);
+  color: var(--cor-texto);
+}
+
+/* ---------- Garantias ---------- */
+.produto__garantias {
+  display: grid;
+  gap: 12px;
+  margin-top: 24px;
+  padding: 20px;
+  border-radius: var(--raio);
+  background: var(--cor-fundo-alt);
+}
+
+.produto__garantias li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.produto__garantias svg {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+}
+
+.produto__garantias strong {
+  display: block;
+}
+
+.produto__garantias span {
+  color: var(--cor-texto-suave);
+}
+
+/* ---------- Acordeão ---------- */
+.acordeao {
+  margin-top: 28px;
+}
+
+.acordeao details {
+  border-top: 1px solid var(--cor-borda);
+}
+
+.acordeao details:last-child {
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.acordeao summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0;
+  font-family: var(--fonte-titulo);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  list-style: none;
+}
+
+.acordeao summary::-webkit-details-marker {
+  display: none;
+}
+
+.acordeao summary::after {
+  content: "+";
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1;
+  transition: transform var(--transicao);
+}
+
+.acordeao details[open] summary::after {
+  transform: rotate(45deg);
+}
+
+.acordeao__corpo {
+  padding-bottom: 20px;
+  font-size: 0.9375rem;
+  color: #1f1f1f;
+}
+
+.acordeao__corpo ul {
+  display: grid;
+  gap: 6px;
+  padding-left: 18px;
+  list-style: disc;
+}
+
+/* ---------- Relacionados ---------- */
+.relacionados {
+  padding-top: var(--secao-espaco);
+}
+
+/* ---------- Produto não encontrado ---------- */
+.produto-vazio {
+  padding: 80px 24px;
+  text-align: center;
+}
+
+.produto-vazio h1 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+}
+
+.produto-vazio p {
+  color: var(--cor-texto-suave);
+  margin-bottom: 24px;
+}
+
+/* ---------- Barra fixa no telemóvel ---------- */
+.barra-compra {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 90;
+  display: none;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  background: var(--cor-fundo);
+  border-top: 1px solid var(--cor-borda);
+  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.06);
+  transform: translateY(100%);
+  transition: transform var(--transicao);
+}
+
+.barra-compra.visivel {
+  transform: none;
+}
+
+.barra-compra__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.barra-compra__nome {
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.barra-compra__preco {
+  font-weight: 700;
+}
+
+.barra-compra .btn {
+  min-height: 46px;
+  padding: 0 18px;
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 900px) {
+  .produto {
+    grid-template-columns: 1fr;
+  }
+
+  .produto__media {
+    position: static;
+  }
+
+  .produto__imagem {
+    cursor: default;
+  }
+
+  .barra-compra {
+    display: flex;
+  }
+
+  .pagina-produto {
+    padding-bottom: calc(var(--secao-espaco) + 70px);
+  }
+}

@@ -1,0 +1,27 @@
+# ==========================================================
+# Caddy: recebe os visitantes, trata do HTTPS (certificado
+# gratuito Let's Encrypt, renovado sozinho) e passa os pedidos
+# para a loja. O domínio vem da variável DOMINIO (.env.producao).
+# ==========================================================
+
+{$DOMINIO} {
+	encode zstd gzip
+
+	# limite do tamanho dos pedidos (cópias de segurança até 60 MB)
+	request_body {
+		max_size 64MB
+	}
+
+	reverse_proxy loja:3000
+
+	log {
+		output stdout
+		format console
+	}
+}
+
+# Endereço alternativo (ex.: sem "www") → redireciona para o principal.
+# Se DOMINIO_ALTERNATIVO ficar vazio, este bloco fica inativo.
+{$DOMINIO_ALTERNATIVO:http://alternativo.invalid} {
+	redir https://{$DOMINIO}{uri} permanent
+}

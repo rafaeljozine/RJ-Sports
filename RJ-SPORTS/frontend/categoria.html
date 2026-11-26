@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categorias — RJ Sports</title>
+  <meta name="description" content="Compre por público (homem, mulher, criança), por desporto ou por idade.">
+
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#0057ff">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="RJ Sports">
+  <meta property="og:locale" content="pt_PT">
+  <meta property="og:title" content="Categorias — RJ Sports">
+  <meta property="og:description" content="Compre por desporto, para homem, mulher ou criança. Entregas em todo Moçambique.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Russo+One&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/categoria.css">
+</head>
+<body>
+
+  <div id="cabecalho"></div>
+
+  <main class="container pagina-categorias">
+    <h1>Categorias</h1>
+    <p class="pagina-categorias__intro">Encontre o que procura por quem vai usar, pelo desporto ou pela idade das crianças.</p>
+
+    <section class="bloco-categorias" aria-labelledby="titulo-publicos">
+      <div class="secao__topo">
+        <div>
+          <span class="sobretitulo">Para quem?</span>
+          <h2 id="titulo-publicos">Homem, Mulher e Criança</h2>
+        </div>
+        <a href="loja.html" class="link-sublinhado">Ver todos</a>
+      </div>
+      <div class="grelha-publicos" id="grelha-publicos"></div>
+    </section>
+
+    <section class="bloco-categorias" aria-labelledby="titulo-desportos">
+      <div class="secao__topo">
+        <div>
+          <span class="sobretitulo">Por desporto</span>
+          <h2 id="titulo-desportos">Escolha a modalidade</h2>
+        </div>
+      </div>
+      <div class="grelha-categorias" id="grelha-desportos"></div>
+    </section>
+
+    <section class="bloco-categorias" aria-labelledby="titulo-idades">
+      <div class="secao__topo">
+        <div>
+          <span class="sobretitulo">Crianças</span>
+          <h2 id="titulo-idades">Por idade</h2>
+        </div>
+        <a href="loja.html?p=crianca" class="link-sublinhado">Tudo para criança</a>
+      </div>
+      <div class="grelha-idades" id="grelha-idades"></div>
+    </section>
+  </main>
+
+  <div id="rodape"></div>
+
+  <!-- Catálogo do servidor (se o site estiver a correr com o backend) -->
+  <script src="/api/catalogo.js"></script>
+  <script src="js/produtos.js"></script>
+  <script src="js/carrinho.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    (function () {
+      var e = RJS.escapar;
+      var seta = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+
+      function contar(filtro) {
+        var n = RJS.produtos.filter(filtro).length;
+        return n === 1 ? "1 produto" : n + " produtos";
+      }
+
+      // Para quem
+      document.getElementById("grelha-publicos").innerHTML = RJS.publicos.map(function (p) {
+        return (
+          '<a class="cartao-publico" href="loja.html?p=' + p.id + '">' +
+          '  <img src="' + e(RJS.imagens.publicos[p.id]) + '" alt="" loading="lazy" onerror="this.remove()">' +
+          '  <span class="cartao-publico__contagem">' + contar(function (x) { return (x.publico || []).indexOf(p.id) > -1; }) + "</span>" +
+          "  <h3>" + e(p.nome) + "</h3>" +
+          "  <p>" + e(p.descricao) + "</p>" +
+          '  <span class="cartao-publico__link">Ver produtos ' + seta + "</span>" +
+          "</a>"
+        );
+      }).join("");
+
+      // Por desporto
+      document.getElementById("grelha-desportos").innerHTML = RJS.categorias.map(function (c) {
+        return (
+          '<a class="cartao-categoria cartao-categoria--' + c.id + '" href="loja.html?c=' + c.id + '">' +
+          '  <img src="' + e(RJS.imagens.categorias[c.id]) + '" alt="" loading="lazy" onerror="this.remove()">' +
+          '  <span class="cartao-categoria__seta" aria-hidden="true">' + seta + "</span>" +
+          "  <div><h3>" + e(c.nome) + "</h3><p>" + e(c.descricao) + "</p>" +
+          '  <span class="cartao-categoria__contagem">' + contar(function (x) { return x.categoria === c.id; }) + "</span></div>" +
+          "</a>"
+        );
+      }).join("");
+
+      // Crianças por idade
+      document.getElementById("grelha-idades").innerHTML = RJS.idades.map(function (i) {
+        return (
+          '<a class="cartao-idade" href="loja.html?p=crianca&i=' + i.id + '">' +
+          "  <strong>" + e(i.nome) + "</strong>" +
+          "  <span>" + contar(function (x) { return (x.idades || []).indexOf(i.id) > -1; }) + "</span>" +
+          "</a>"
+        );
+      }).join("");
+    })();
+  </script>
+</body>
+</html>
