@@ -17,8 +17,12 @@ const env = {
     (process.env.VERCEL_PROJECT_PRODUCTION_URL ? "https://" + process.env.VERCEL_PROJECT_PRODUCTION_URL : "")
   ).replace(/\/+$/, ""),
   vercel: !!process.env.VERCEL,
-  // fotos no Vercel Blob (vazio = pasta uploads)
-  blobToken: process.env.BLOB_READ_WRITE_TOKEN || "",
+  // fotos no Vercel Blob. Duas formas de autenticação:
+  // - BLOB_STORE_ID (Blob ligado ao projeto no Vercel, autenticação OIDC automática)
+  // - BLOB_READ_WRITE_TOKEN (chave do armazenamento)
+  // Sem nenhuma das duas, as fotos ficam na pasta uploads.
+  blobToken: process.env.BLOB_READ_WRITE_TOKEN || undefined,
+  blobAtivo: !!(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID),
   // tipo do armazenamento Blob: "private" (fotos servidas por /api/fotos) ou "public"
   blobAcesso: process.env.BLOB_ACESSO === "public" ? "public" : "private",
   // outros endereços do site que podem enviar pedidos à API

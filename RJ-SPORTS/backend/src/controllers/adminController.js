@@ -36,7 +36,7 @@ exports.upload = assincrono(async (req, res) => {
   // Vercel: a foto vai para o Vercel Blob.
   // - armazenamento privado: a loja mostra-a por /api/fotos/… (ver fotoController)
   // - armazenamento público: fica com o endereço https://… do próprio Blob
-  if (env.blobToken) {
+  if (env.blobAtivo) {
     const { put } = require("@vercel/blob");
     const foto = await put("produtos/" + nomeAleatorio(req.file.mimetype), req.file.buffer, {
       access: env.blobAcesso,

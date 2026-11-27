@@ -98,7 +98,7 @@ Para uma loja deste tamanho, os planos gratuitos chegam para começar.
 ### 2. Base de dados e fotos (separador *Storage* do projeto)
 
 1. **Create Database → Neon** (Postgres), região **Frankfurt** (a mais próxima de Moçambique) → ligar ao projeto. São criadas as variáveis `DATABASE_URL` e `DATABASE_URL_UNPOOLED`.
-2. **Create → Blob** → ligar ao projeto. É criada a variável `BLOB_READ_WRITE_TOKEN`. O armazenamento pode ser *Private* (o normal). Se o criar *Public*, defina também `BLOB_ACESSO=public`.
+2. **Create → Blob** → ligar ao projeto. O Vercel cria `BLOB_STORE_ID` (autenticação automática) ou, em projetos antigos, `BLOB_READ_WRITE_TOKEN` — servem os dois. O armazenamento pode ser *Private* (o normal). Se o criar *Public*, defina também `BLOB_ACESSO=public`.
 
 ### 3. Variáveis (*Settings → Environment Variables*)
 

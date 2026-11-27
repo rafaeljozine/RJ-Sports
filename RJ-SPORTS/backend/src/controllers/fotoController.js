@@ -1,6 +1,6 @@
 /* ==========================================================
    GET /api/fotos/produtos/… — fotos guardadas num Vercel Blob
-   privado. O servidor lê-as com a chave (BLOB_READ_WRITE_TOKEN)
+   privado. O servidor lê-as com a autenticação do Blob (OIDC ou chave)
    e devolve-as com cache longa: a rede do Vercel guarda cada
    foto e a função quase não volta a ser chamada.
    (Os nomes são aleatórios e nunca mudam, por isso "immutable".)
@@ -14,7 +14,7 @@ const CAMINHO = /^produtos\/[a-f0-9]{24}\.(jpg|png|webp)$/;
 
 exports.servir = assincrono(async (req, res) => {
   const caminho = req.params[0] || "";
-  if (!env.blobToken || !CAMINHO.test(caminho)) throw erros.naoEncontrado("Foto não encontrada.");
+  if (!env.blobAtivo || !CAMINHO.test(caminho)) throw erros.naoEncontrado("Foto não encontrada.");
 
   const { get } = require("@vercel/blob");
   const r = await get(caminho, {
