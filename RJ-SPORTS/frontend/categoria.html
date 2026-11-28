@@ -88,7 +88,7 @@
       document.getElementById("grelha-publicos").innerHTML = RJS.publicos.map(function (p) {
         return (
           '<a class="cartao-publico" href="loja.html?p=' + p.id + '">' +
-          '  <img src="' + e(RJS.imagens.publicos[p.id]) + '" alt="" loading="lazy" onerror="this.remove()">' +
+          '  <img' + RJS.atributosImagem(RJS.imagens.publicos[p.id], "(max-width: 700px) 100vw, 33vw") + ' alt="" loading="lazy" decoding="async" onerror="this.remove()">' +
           '  <span class="cartao-publico__contagem">' + contar(function (x) { return (x.publico || []).indexOf(p.id) > -1; }) + "</span>" +
           "  <h3>" + e(p.nome) + "</h3>" +
           "  <p>" + e(p.descricao) + "</p>" +
@@ -101,7 +101,7 @@
       document.getElementById("grelha-desportos").innerHTML = RJS.categorias.map(function (c) {
         return (
           '<a class="cartao-categoria cartao-categoria--' + c.id + '" href="loja.html?c=' + c.id + '">' +
-          '  <img src="' + e(RJS.imagens.categorias[c.id]) + '" alt="" loading="lazy" onerror="this.remove()">' +
+          '  <img' + RJS.atributosImagem(RJS.imagens.categorias[c.id], "(max-width: 700px) 50vw, 25vw") + ' alt="" loading="lazy" decoding="async" onerror="this.remove()">' +
           '  <span class="cartao-categoria__seta" aria-hidden="true">' + seta + "</span>" +
           "  <div><h3>" + e(c.nome) + "</h3><p>" + e(c.descricao) + "</p>" +
           '  <span class="cartao-categoria__contagem">' + contar(function (x) { return x.categoria === c.id; }) + "</span></div>" +

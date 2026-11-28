@@ -129,7 +129,7 @@
   <script src="js/navbar.js"></script>
   <script src="js/main.js"></script>
   <script>
-    document.getElementById("imagem-sobre").src = RJS.imagens.sobre;
+    RJS.aplicarImagem(document.getElementById("imagem-sobre"), RJS.imagens.sobre, "(max-width: 900px) 100vw, 50vw");
   </script>
 </body>
 </html>

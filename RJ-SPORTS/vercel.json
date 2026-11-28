@@ -4,6 +4,7 @@
   "installCommand": "npm ci --prefix backend",
   "buildCommand": "npm run vercel-build --prefix backend",
   "outputDirectory": "frontend",
+  "regions": ["fra1"],
   "functions": {
     "api/index.js": { "maxDuration": 30 }
   },
@@ -27,6 +28,6 @@
     },
     { "source": "/(css|js)/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }] },
     { "source": "/assets/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }] },
-    { "source": "/api/((?!fotos/).*)", "headers": [{ "key": "Cache-Control", "value": "no-store" }] }
+    { "source": "/api/((?!fotos/|catalogo).*)", "headers": [{ "key": "Cache-Control", "value": "no-store" }] }
   ]
 }

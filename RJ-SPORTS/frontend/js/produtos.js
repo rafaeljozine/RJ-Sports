@@ -218,6 +218,49 @@ RJS.fotoNet = function (idFoto, largura, altura) {
     "?auto=format&fit=crop&w=" + largura + "&h=" + altura + "&q=75";
 };
 
+/**
+ * Atributos src/srcset/sizes de uma imagem, para o navegador descarregar
+ * só o tamanho de que precisa (telemóvel: foto pequena; ecrã grande: maior).
+ * Funciona com fotos do Unsplash (pede várias larguras com o mesmo recorte).
+ * Outras fotos (assets/, /api/fotos/…) ficam só com o src.
+ *   tamanhos: o atributo "sizes", ex.: "(max-width: 600px) 50vw, 25vw"
+ */
+var LARGURAS_FOTO = [160, 320, 480, 640, 800, 1080, 1440, 1920, 2400];
+RJS.atributosImagem = function (url, tamanhos) {
+  var src = String(url || "");
+  var escapar = function (t) {
+    return t.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  };
+  var m = /^https:\/\/images\.unsplash\.com\/[^?]+\?(.*)$/.exec(src);
+  var w = m && /(?:^|&)w=(\d+)/.exec(m[1]);
+  if (!w) return ' src="' + escapar(src) + '"';
+  var largura = Number(w[1]);
+  var h = /(?:^|&)h=(\d+)/.exec(m[1]);
+  var proporcao = h ? Number(h[1]) / largura : 0;
+  var variante = function (l) {
+    var v = src.replace(/([?&])w=\d+/, "$1w=" + l).replace(/([?&])q=\d+/, "$1q=70");
+    return proporcao ? v.replace(/([?&])h=\d+/, "$1h=" + Math.round(l * proporcao)) : v;
+  };
+  var lista = LARGURAS_FOTO.filter(function (l) { return l <= largura; });
+  if (lista[lista.length - 1] !== largura) lista.push(largura);
+  return ' src="' + escapar(variante(Math.min(640, largura))) + '"' +
+    ' srcset="' + escapar(lista.map(function (l) { return variante(l) + " " + l + "w"; }).join(", ")) + '"' +
+    ' sizes="' + escapar(tamanhos || "100vw") + '"';
+};
+
+/** O mesmo, para uma <img> que já existe na página */
+RJS.aplicarImagem = function (img, url, tamanhos) {
+  if (!img) return;
+  var tmp = document.createElement("div");
+  tmp.innerHTML = "<img" + RJS.atributosImagem(url, tamanhos) + ">";
+  var nova = tmp.firstChild;
+  if (nova.getAttribute("srcset")) {
+    img.setAttribute("sizes", nova.getAttribute("sizes"));
+    img.setAttribute("srcset", nova.getAttribute("srcset"));
+  }
+  img.src = nova.getAttribute("src");
+};
+
 var FOTOS_PRODUTOS = {
   "camisola-futebol-pro": "photo-1552066379-e7bfd22155c5",
   "chuteiras-velocidade": "photo-1511886929837-354d827aae26",

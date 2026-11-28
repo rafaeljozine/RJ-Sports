@@ -40,7 +40,8 @@ O site também abre só com os ficheiros (por exemplo, `python -m http.server` n
 
 ## Como funciona
 
-- **Catálogo** — a loja carrega `/api/catalogo.js` antes do resto; só vão para o site os produtos visíveis, sem custos nem fornecedores.
+- **Catálogo** — a loja carrega `/api/catalogo.js` antes do resto; só vão para o site os produtos visíveis, sem custos nem fornecedores. No Vercel fica 1 minuto em cache na rede (renovado em segundo plano): uma alteração no painel aparece na loja em cerca de 1 minuto.
+- **Imagens** — cada foto do Unsplash é pedida em várias larguras (`srcset`, função `RJS.atributosImagem` em `js/produtos.js`) e o navegador descarrega só a que precisa; no carrossel do topo só a 1.ª foto é descarregada logo, as outras um pouco antes de aparecerem.
 - **Encomendas** — o checkout envia para `POST /api/encomendas`. O servidor **recalcula os preços** a partir da base de dados (o navegador não consegue alterá-los), valida o telefone de Moçambique e o tamanho, aplica a taxa da zona e devolve o número `RJS-123456`. O cliente envia ainda a encomenda pelo WhatsApp.
 - **Códigos de desconto** — o cliente escreve o código no resumo do checkout (`POST /api/descontos/validar` mostra o desconto). Ao registar a encomenda, o servidor volta a validar a campanha (ligada, dentro das datas, acima da compra mínima) e grava o desconto e o código; o `total` da encomenda já vem com o desconto.
 - **Acompanhar** — `GET /api/encomendas/:numero?telefone=…` só responde se o telefone coincidir.

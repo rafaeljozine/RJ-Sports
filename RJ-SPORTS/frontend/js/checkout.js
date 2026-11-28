@@ -177,7 +177,7 @@
         '<div class="resumo__artigo">' +
         '  <div class="resumo__artigo-media">' +
         '    <span class="resumo__artigo-qtd">' + l.quantidade + "</span>" +
-        '    <img src="' + e(p.imagem) + '" alt="" onerror="this.remove()">' +
+        '    <img' + RJS.atributosImagem(p.imagem, "60px") + ' alt="" decoding="async" onerror="this.remove()">' +
         "  </div>" +
         "  <div>" +
         '    <div class="resumo__artigo-nome">' + e(p.nome) + "</div>" +

@@ -16,13 +16,14 @@ function paraJs(valor) {
     .split(SEPARADOR_PARAGRAFO).join("\\u2029");
 }
 
-function enviarScript(res, atribuicoes) {
+/** cache: valor de Cache-Control (por omissão "no-store", ex.: dados do painel) */
+function enviarScript(res, atribuicoes, cache = "no-store") {
   const corpo = Object.keys(atribuicoes)
     .map((nome) => "window." + nome + "=" + paraJs(atribuicoes[nome]) + ";")
     .join("\n");
   res.set({
     "Content-Type": "application/javascript; charset=utf-8",
-    "Cache-Control": "no-store"
+    "Cache-Control": cache
   });
   res.send(corpo);
 }
