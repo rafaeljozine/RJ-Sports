@@ -40,7 +40,7 @@
     <!-- História -->
     <section class="bloco historia">
       <div class="historia__media">
-        <img id="imagem-sobre" alt="Jogador de futebol em campo" onerror="this.remove()">
+        <img id="imagem-sobre" alt="Jogador de futebol em campo" data-falha="remover">
       </div>
       <div class="historia__texto">
         <span class="sobretitulo">A nossa história</span>
@@ -128,8 +128,6 @@
   <script src="js/carrinho.js"></script>
   <script src="js/navbar.js"></script>
   <script src="js/main.js"></script>
-  <script>
-    RJS.aplicarImagem(document.getElementById("imagem-sobre"), RJS.imagens.sobre, "(max-width: 900px) 100vw, 50vw");
-  </script>
+  <script src="js/paginas/sobre.js"></script>
 </body>
 </html>

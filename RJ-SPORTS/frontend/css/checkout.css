@@ -197,6 +197,24 @@
   font-size: 0.875rem;
 }
 
+.checkout__lembrar {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 4px 0 16px;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.checkout__lembrar input {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  accent-color: var(--cor-destaque);
+}
+
 .checkout__termos {
   margin: 12px 0 0;
   font-size: 0.8125rem;

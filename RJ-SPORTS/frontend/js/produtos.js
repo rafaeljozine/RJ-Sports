@@ -365,6 +365,14 @@ RJS.produtosBase = RJS.produtos.slice();
 RJS.categoriasBase = RJS.categorias.slice();
 RJS.modoApi = !!(window.RJS_DADOS && Array.isArray(window.RJS_DADOS.produtos));
 
+/* O modo sem servidor (dados só no navegador) só existe para ver o
+   design neste computador. Num site público, se o servidor falhar,
+   a loja avisa em vez de "registar" encomendas só no navegador. */
+RJS.local = location.protocol === "file:" ||
+  /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) ||
+  /\.(localhost|test)$/.test(location.hostname);
+RJS.modoDemo = !RJS.modoApi && RJS.local;
+
 if (RJS.modoApi) {
   RJS.produtos = window.RJS_DADOS.produtos;
   if (window.RJS_DADOS.categorias && window.RJS_DADOS.categorias.length) RJS.categorias = window.RJS_DADOS.categorias;
@@ -382,14 +390,48 @@ if (RJS.modoApi) {
   RJS.lojaAdmin = {};
 }
 
-/* ---------- Pedidos à API (só com o servidor a correr) ---------- */
+/* ---------- Proteção contra robôs ----------
+   Os formulários (login, encomenda, códigos de desconto…) pedem ao
+   servidor uma "prova" assinada assim que a página abre. Ao enviar,
+   a prova segue num cabeçalho; o servidor recusa se faltar, se for
+   falsa, se o formulário foi enviado depressa demais (típico de
+   robôs) ou se o campo-armadilha escondido vier preenchido. */
+var provaPedido = null;
+var provaRenovacao = null;
+RJS.prepararProtecao = function () {
+  if (!RJS.modoApi && !window.RJSA_API) return Promise.resolve("");
+  // a prova vale 2 horas: com a página aberta, é trocada a cada hora
+  if (!provaRenovacao) {
+    provaRenovacao = setInterval(function () { provaPedido = null; RJS.prepararProtecao(); }, 60 * 60 * 1000);
+  }
+  if (!provaPedido) {
+    provaPedido = fetch("/api/protecao", { credentials: "same-origin", cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : {}; })
+      .then(function (d) { return d.prova || ""; })
+      .catch(function () { provaPedido = null; return ""; });
+  }
+  return provaPedido;
+};
+
+/* ---------- Pedidos à API (só com o servidor a correr) ----------
+   opcoes.protegido: envia a prova anti-robô (e opcoes.armadilha,
+   o valor do campo escondido do formulário) */
 RJS.api = function (caminho, opcoes) {
   opcoes = opcoes || {};
-  return fetch("/api" + caminho, {
-    method: opcoes.metodo || "GET",
-    headers: opcoes.corpo ? { "Content-Type": "application/json" } : undefined,
-    body: opcoes.corpo ? JSON.stringify(opcoes.corpo) : undefined,
-    credentials: "same-origin"
+  var prova = opcoes.protegido ? RJS.prepararProtecao() : Promise.resolve("");
+  return prova.then(function (valorProva) {
+    var cabecalhos = {};
+    if (opcoes.corpo) cabecalhos["Content-Type"] = "application/json";
+    if (opcoes.protegido) {
+      cabecalhos["X-RJS-Prova"] = valorProva;
+      cabecalhos["X-RJS-Armadilha"] = opcoes.armadilha || "";
+    }
+    return fetch("/api" + caminho, {
+      method: opcoes.metodo || "GET",
+      headers: cabecalhos,
+      body: opcoes.corpo ? JSON.stringify(opcoes.corpo) : undefined,
+      credentials: "same-origin"
+    });
   }).then(function (resposta) {
     if (resposta.status === 204) return null;
     return resposta.json().catch(function () { return {}; }).then(function (dados) {
@@ -405,6 +447,32 @@ RJS.api = function (caminho, opcoes) {
     throw new Error("Sem ligação ao servidor. Verifique a internet e tente novamente.");
   });
 };
+
+/* ---------- Imagens que não carregam e botões de imprimir ----------
+   Em vez de atributos onerror="…"/onclick="…" (que obrigariam a CSP a
+   permitir código embutido), as imagens levam data-falha:
+     remover → tira a imagem; remover-pai → tira o elemento à volta;
+     esconder → deixa o espaço vazio.
+   E os botões data-acao="imprimir" abrem a impressão. */
+(function () {
+  function tratar(img) {
+    var acao = img.getAttribute("data-falha");
+    if (acao === "remover") img.remove();
+    else if (acao === "remover-pai" && img.parentNode) img.parentNode.remove();
+    else if (acao === "esconder") img.style.visibility = "hidden";
+  }
+  document.addEventListener("error", function (ev) {
+    var alvo = ev.target;
+    if (alvo && alvo.tagName === "IMG" && alvo.hasAttribute("data-falha")) tratar(alvo);
+  }, true);
+  // imagens do HTML que já falharam antes de este ficheiro carregar
+  document.querySelectorAll("img[data-falha]").forEach(function (img) {
+    if (img.complete && img.getAttribute("src") && img.naturalWidth === 0) tratar(img);
+  });
+  document.addEventListener("click", function (ev) {
+    if (ev.target.closest && ev.target.closest('[data-acao="imprimir"]')) window.print();
+  });
+})();
 
 /* ---------- Utilitários do catálogo ---------- */
 

@@ -84,7 +84,7 @@
     '    <div class="produto__imagem" id="imagem-produto">' +
     '      <span class="cartao-produto__marcador" aria-hidden="true">' + e(RJS.iniciais(p.nome)) + "</span>" +
     '      <img' + RJS.atributosImagem(p.imagem, "(max-width: 900px) 100vw, 50vw") +
-      ' alt="' + e(p.nome) + '" fetchpriority="high" onerror="this.remove()">' +
+      ' alt="' + e(p.nome) + '" fetchpriority="high" data-falha="remover">' +
     '      <div class="cartao-produto__etiquetas">' + etiquetas + "</div>" +
     "    </div>" +
     "  </div>" +

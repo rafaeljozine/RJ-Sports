@@ -203,7 +203,7 @@
         '<div class="linha-carrinho">' +
         '  <a class="linha-carrinho__media" href="produto.html?id=' + encodeURIComponent(p.id) + '">' +
         '    <span class="cartao-produto__marcador" style="font-size:1.25rem">' + e(RJS.iniciais(p.nome)) + "</span>" +
-        '    <img' + RJS.atributosImagem(p.imagem, "80px") + ' alt="" loading="lazy" decoding="async" onerror="this.remove()">' +
+        '    <img' + RJS.atributosImagem(p.imagem, "80px") + ' alt="" loading="lazy" decoding="async" data-falha="remover">' +
         "  </a>" +
         "  <div>" +
         '    <div class="linha-carrinho__nome">' + e(p.nome) + "</div>" +

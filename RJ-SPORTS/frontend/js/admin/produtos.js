@@ -325,7 +325,7 @@
     /* --- imagem --- */
     function desenharImagem() {
       var previa = document.getElementById("previa");
-      previa.innerHTML = imagem ? '<img src="' + e(RJSA.img(imagem)) + '" alt="" onerror="this.remove()">' : "Sem imagem";
+      previa.innerHTML = imagem ? '<img src="' + e(RJSA.img(imagem)) + '" alt="" data-falha="remover">' : "Sem imagem";
     }
     document.getElementById("f-imagem").addEventListener("change", function (ev) {
       imagem = ev.target.value.trim();

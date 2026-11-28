@@ -4,9 +4,10 @@
    COM SERVIDOR (window.RJSA_API, vindo de /api/admin/dados.js):
      o login é feito no servidor, que guarda a sessão num cookie
      protegido (httpOnly). A palavra-passe é verificada com bcrypt.
-   SEM SERVIDOR (site aberto só com ficheiros):
-     a conta fica neste navegador, com a palavra-passe guardada
-     como hash SHA-256. Serve para ver o painel, não é segurança real.
+   SEM SERVIDOR: só em localhost (ver RJS.local em js/produtos.js),
+     como DEMONSTRAÇÃO do design — sem palavra-passe nenhuma no
+     código e sem dados reais. Num site público sem servidor o
+     painel não abre (nunca há um "login local" de recurso).
    ========================================================== */
 
 window.RJSA = window.RJSA || {};
@@ -28,8 +29,13 @@ RJSA.auth = (function () {
       sessao: function () {
         return dados ? { nome: dados.conta.nome, email: dados.conta.email } : null;
       },
-      entrar: function (email, palavraPasse) {
-        return RJS.api("/auth/entrar", { metodo: "POST", corpo: { email: email, palavraPasse: palavraPasse } })
+      entrar: function (email, palavraPasse, armadilha) {
+        return RJS.api("/auth/entrar", {
+          metodo: "POST",
+          protegido: true,
+          armadilha: armadilha,
+          corpo: { email: email, palavraPasse: palavraPasse }
+        })
           .then(function () { return true; })
           .catch(function (erro) {
             if (erro.estado === 401 || erro.estado === 400) return false;
@@ -68,74 +74,51 @@ RJSA.auth = (function () {
   }
 
   /* ==========================================================
-     SEM SERVIDOR (só neste navegador)
+     SEM SERVIDOR
      ========================================================== */
-  var CHAVE_CONTA = "rjs_admin_conta";
   var CHAVE_SESSAO = "rjs_admin_sessao";
 
-  // Conta inicial — mude a palavra-passe em Configurações no primeiro acesso
-  var CONTA_INICIAL = {
-    nome: "Administrador",
-    email: "admin@rjsports.co.mz",
-    palavraPasse: "rjsports2026"
-  };
+  // limpa a conta local antiga (tinha palavra-passe guardada no navegador)
+  try { localStorage.removeItem("rjs_admin_conta"); } catch (e) { /* ignora */ }
 
-  function lerJson(armazem, chave) {
+  function lerSessao() {
     try {
-      return JSON.parse(armazem.getItem(chave) || "null");
+      return JSON.parse(sessionStorage.getItem(CHAVE_SESSAO) || "null");
     } catch (e) {
       return null;
     }
   }
 
-  function guardarJson(armazem, chave, valor) {
+  function guardarSessao(valor) {
     try {
-      armazem.setItem(chave, JSON.stringify(valor));
+      if (valor) sessionStorage.setItem(CHAVE_SESSAO, JSON.stringify(valor));
+      else sessionStorage.removeItem(CHAVE_SESSAO);
     } catch (e) {
       /* sem armazenamento disponível */
     }
   }
 
-  /** SHA-256 em hexadecimal (com alternativa simples se o navegador não suportar) */
-  function hash(texto) {
-    var bytes = new TextEncoder().encode("rjs::" + texto);
-    if (window.crypto && crypto.subtle) {
-      return crypto.subtle.digest("SHA-256", bytes).then(function (buf) {
-        return Array.prototype.map.call(new Uint8Array(buf), function (b) {
-          return ("0" + b.toString(16)).slice(-2);
-        }).join("");
-      });
-    }
-    var h = 0;
-    for (var i = 0; i < bytes.length; i++) h = (h * 31 + bytes[i]) | 0;
-    return Promise.resolve("x" + (h >>> 0).toString(16));
-  }
+  var DEMO = { nome: "Demonstração", email: "demo@localhost", inicial: false };
 
   function conta() {
-    var c = lerJson(localStorage, CHAVE_CONTA);
-    if (c && c.hash) return Promise.resolve(c);
-    return hash(CONTA_INICIAL.palavraPasse).then(function (h) {
-      var nova = { nome: CONTA_INICIAL.nome, email: CONTA_INICIAL.email, hash: h, inicial: true };
-      guardarJson(localStorage, CHAVE_CONTA, nova);
-      return nova;
-    });
+    return Promise.resolve(RJS.local ? DEMO : null);
   }
 
+  // Site público sem servidor: não há sessão possível
   function sessao() {
-    return lerJson(sessionStorage, CHAVE_SESSAO);
+    return RJS.local ? lerSessao() : null;
   }
 
-  function entrar(email, palavraPasse) {
-    return Promise.all([conta(), hash(palavraPasse)]).then(function (r) {
-      var c = r[0];
-      var ok = c.email.toLowerCase() === String(email).trim().toLowerCase() && c.hash === r[1];
-      if (ok) guardarJson(sessionStorage, CHAVE_SESSAO, { nome: c.nome, email: c.email, desde: new Date().toISOString() });
-      return ok;
-    });
+  function entrar() {
+    if (!RJS.local) {
+      return Promise.reject(new Error("O servidor do painel não respondeu. Tente novamente daqui a pouco."));
+    }
+    guardarSessao({ nome: DEMO.nome, email: DEMO.email, desde: new Date().toISOString() });
+    return Promise.resolve(true);
   }
 
   function sair() {
-    try { sessionStorage.removeItem(CHAVE_SESSAO); } catch (e) { /* ignora */ }
+    guardarSessao(null);
     location.href = "login.html";
   }
 
@@ -147,26 +130,13 @@ RJSA.auth = (function () {
     return false;
   }
 
-  function alterarPalavraPasse(atual, nova) {
-    return Promise.all([conta(), hash(atual), hash(nova)]).then(function (r) {
-      if (r[0].hash !== r[1]) return false;
-      var c = r[0];
-      c.hash = r[2];
-      c.inicial = false;
-      guardarJson(localStorage, CHAVE_CONTA, c);
-      return true;
-    });
+  // Na demonstração não há palavra-passe para mudar
+  function alterarPalavraPasse() {
+    return Promise.resolve(true);
   }
 
   function alterarDados(nome, email) {
-    return conta().then(function (c) {
-      c.nome = nome;
-      c.email = email;
-      guardarJson(localStorage, CHAVE_CONTA, c);
-      var s = sessao();
-      if (s) guardarJson(sessionStorage, CHAVE_SESSAO, Object.assign(s, { nome: nome, email: email }));
-      return c;
-    });
+    return Promise.resolve({ nome: nome, email: email, inicial: false });
   }
 
   return {
@@ -194,6 +164,14 @@ RJSA.auth = (function () {
 
   var erro = document.getElementById("login-erro");
   var botao = form.querySelector('button[type="submit"]');
+  RJS.prepararProtecao();
+
+  if (!RJSA.auth.api && RJS.local) {
+    var nota = document.createElement("p");
+    nota.className = "login__nota";
+    nota.textContent = "Modo de demonstração (sem servidor): escreva qualquer email e palavra-passe. Os dados ficam só neste navegador.";
+    form.insertBefore(nota, form.firstChild);
+  }
 
   function falhou(mensagem) {
     erro.textContent = mensagem || "Email ou palavra-passe incorretos.";
@@ -210,7 +188,7 @@ RJSA.auth = (function () {
     botao.disabled = true;
     botao.textContent = "A entrar…";
 
-    RJSA.auth.entrar(form.email.value, form.palavraPasse.value).then(function (ok) {
+    RJSA.auth.entrar(form.email.value, form.palavraPasse.value, form.website ? form.website.value : "").then(function (ok) {
       if (!ok) return falhou();
       var voltar = new URLSearchParams(location.search).get("voltar");
       // só aceita páginas do próprio painel

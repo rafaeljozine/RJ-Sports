@@ -1,7 +1,10 @@
 /* ==========================================================
    Sessão do painel
-   O login cria um cookie "rjs_sessao" (httpOnly, SameSite=Strict)
-   com um JWT. O JavaScript da página não consegue lê-lo.
+   O login cria um cookie (httpOnly, SameSite=Strict, Secure em
+   produção, com o prefixo __Host- que o impede de ser definido por
+   subdomínios) com um JWT. O JavaScript da página não consegue lê-lo.
+   Ao mudar a palavra-passe, as sessões anteriores deixam de valer
+   (Admin.sessoesDesde).
    ========================================================== */
 
 const jwt = require("jsonwebtoken");
@@ -9,7 +12,8 @@ const prisma = require("../config/database");
 const env = require("../config/env");
 const { erros } = require("../utils/erros");
 
-const COOKIE = "rjs_sessao";
+// "__Host-" só funciona com HTTPS; em localhost usa o nome simples
+const COOKIE = env.producao ? "__Host-rjs_sessao" : "rjs_sessao";
 
 function opcoesCookie() {
   return {
@@ -22,7 +26,7 @@ function opcoesCookie() {
 }
 
 function criarSessao(res, admin) {
-  const token = jwt.sign({ sub: admin.id }, env.jwtSegredo, { expiresIn: env.sessaoHoras + "h" });
+  const token = jwt.sign({ sub: admin.id }, env.jwtSegredo, { expiresIn: env.sessaoHoras + "h", algorithm: "HS256" });
   res.cookie(COOKIE, token, opcoesCookie());
 }
 
@@ -35,8 +39,11 @@ async function lerSessao(req) {
   const token = req.cookies && req.cookies[COOKIE];
   if (!token) return null;
   try {
-    const dados = jwt.verify(token, env.jwtSegredo);
-    return await prisma.admin.findUnique({ where: { id: Number(dados.sub) } });
+    const dados = jwt.verify(token, env.jwtSegredo, { algorithms: ["HS256"] });
+    const admin = await prisma.admin.findUnique({ where: { id: Number(dados.sub) } });
+    // sessão criada antes de a palavra-passe mudar: já não vale
+    if (!admin || dados.iat < Math.floor(admin.sessoesDesde.getTime() / 1000)) return null;
+    return admin;
   } catch (e) {
     return null;
   }

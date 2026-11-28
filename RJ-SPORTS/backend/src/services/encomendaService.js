@@ -10,6 +10,12 @@ const { erros } = require("../utils/erros");
 const { normalizarTelefone, formatarTelefone, gerarNumero, lista } = require("../utils/formatos");
 const { encomendaParaApi } = require("../utils/mapeadores");
 const descontos = require("./descontoService");
+const LimiteStore = require("../utils/limiteStore");
+
+// contra encomendas falsas em massa: no máximo 5 por telefone a cada 24 horas
+const ENCOMENDAS_POR_TELEFONE = 5;
+const porTelefone = new LimiteStore("encomenda-telefone");
+porTelefone.init({ windowMs: 24 * 60 * 60 * 1000 });
 
 const INCLUIR = { itens: true, historico: true };
 
@@ -32,6 +38,11 @@ async function criarDoCheckout(dados) {
     const t2 = normalizarTelefone(c.telefone2);
     if (!t2) throw erros.pedidoInvalido("O outro contacto é inválido.");
     telefone2 = formatarTelefone(t2);
+  }
+
+  const contagem = await porTelefone.increment(telefone);
+  if (contagem.totalHits > ENCOMENDAS_POR_TELEFONE) {
+    throw erros.pedidoInvalido("Já recebemos várias encomendas deste número hoje. Para mais, fale connosco pelo WhatsApp.");
   }
 
   // Zona de entrega

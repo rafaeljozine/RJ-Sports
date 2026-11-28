@@ -101,7 +101,7 @@
   function validarCodigo(codigo, subtotal) {
     codigo = String(codigo || "").trim().toUpperCase();
     if (RJS.modoApi) {
-      return RJS.api("/descontos/validar", { metodo: "POST", corpo: { codigo: codigo, subtotal: subtotal } });
+      return RJS.api("/descontos/validar", { metodo: "POST", protegido: true, armadilha: valorArmadilha(), corpo: { codigo: codigo, subtotal: subtotal } });
     }
     return new Promise(function (resolver) {
       var campanhas = (lerJson("rjs_admin_db", {}) || {}).campanhas || [];
@@ -177,7 +177,7 @@
         '<div class="resumo__artigo">' +
         '  <div class="resumo__artigo-media">' +
         '    <span class="resumo__artigo-qtd">' + l.quantidade + "</span>" +
-        '    <img' + RJS.atributosImagem(p.imagem, "60px") + ' alt="" decoding="async" onerror="this.remove()">' +
+        '    <img' + RJS.atributosImagem(p.imagem, "60px") + ' alt="" decoding="async" data-falha="remover">' +
         "  </div>" +
         "  <div>" +
         '    <div class="resumo__artigo-nome">' + e(p.nome) + "</div>" +
@@ -250,7 +250,9 @@
 
     var total = RJS.carrinho.total();
     atualizarCupao(total);
-    var c = rascunho || lerJson("rjs_cliente", {});
+    var guardados = lerJson("rjs_cliente", null);
+    var c = rascunho || guardados || {};
+    var lembrar = rascunho ? !!rascunho.lembrar : !!guardados;
     var pagamentoGuardado = c.pagamento || "numerario";
 
     alvo.innerHTML =
@@ -258,6 +260,9 @@
       '<p class="checkout__intro">Preencha os seus dados. Ligamos para confirmar a encomenda e a taxa de entrega — só paga quando receber.</p>' +
       '<div class="checkout">' +
       '  <form id="form-encomenda" novalidate>' +
+      // campo-armadilha: invisível para pessoas; os robôs costumam preenchê-lo
+      '    <div class="campo-armadilha" aria-hidden="true"><label for="website">Website</label>' +
+      '      <input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></div>' +
 
       '    <section class="etapa">' +
       '      <h2 class="etapa__titulo"><span class="etapa__numero">1</span> Contacto</h2>' +
@@ -301,6 +306,8 @@
       '      <p class="pagamento__nota">Não paga nada agora. Escolha apenas como prefere pagar quando receber.</p>' +
       "    </section>" +
 
+      '    <label class="checkout__lembrar"><input type="checkbox" id="lembrar-dados"' + (lembrar ? " checked" : "") + '>' +
+      ' Guardar os meus dados neste dispositivo para a próxima encomenda</label>' +
       '    <div class="checkout__enviar">' +
       '      <button type="submit" class="btn btn--destaque btn--bloco">Confirmar encomenda · ' + RJS.formatarPreco(total - valorDesconto()) + "</button>" +
       '      <p class="checkout__termos">Ao confirmar, a RJ Sports entra em contacto para validar a encomenda antes do envio.</p>' +
@@ -311,6 +318,12 @@
 
     ligarFormulario();
     ligarCupao();
+    RJS.prepararProtecao();
+  }
+
+  function valorArmadilha() {
+    var campo = document.getElementById("website");
+    return campo ? campo.value : "";
   }
 
   function ligarCupao() {
@@ -438,7 +451,11 @@
 
     // Sem servidor: a encomenda fica só neste navegador (e segue pelo WhatsApp)
     if (!RJS.modoApi) {
-      concluir(encomenda, linhas, cliente, pagamentoId);
+      if (RJS.modoDemo) {
+        concluir(encomenda, linhas, cliente, pagamentoId);
+      } else {
+        RJS.aviso("Não foi possível ligar à loja. Verifique a internet e tente novamente daqui a pouco.");
+      }
       return;
     }
 
@@ -451,6 +468,8 @@
 
     RJS.api("/encomendas", {
       metodo: "POST",
+      protegido: true,
+      armadilha: valorArmadilha(),
       corpo: {
         cliente: cliente,
         pagamento: pagamento.nome,
@@ -481,22 +500,34 @@
   }
 
   function concluir(encomenda, linhas, cliente, pagamentoId) {
-    // Guarda a encomenda (usado mais tarde em "Acompanhar encomenda")
+    // Atalho em "Acompanhar encomenda". Com servidor guarda só o número,
+    // a data, o total e o telefone (o resto vem do servidor quando se abre);
+    // na demonstração sem servidor guarda a encomenda inteira.
     var encomendas = lerJson("rjs_encomendas", []);
-    encomendas.unshift(encomenda);
-    guardarJson("rjs_encomendas", encomendas.slice(0, 20));
+    encomendas.unshift(RJS.modoApi ? {
+      numero: encomenda.numero,
+      data: encomenda.data,
+      total: encomenda.total,
+      cliente: { telefone: encomenda.cliente.telefone }
+    } : encomenda);
+    guardarJson("rjs_encomendas", encomendas.slice(0, 10));
 
-    // Guarda os dados do cliente para preencher na próxima vez
-    guardarJson("rjs_cliente", {
-      nome: cliente.nome,
-      telefone: valor("telefone"),
-      telefone2: valor("telefone2"),
-      provincia: cliente.provincia,
-      cidade: cliente.cidade,
-      bairro: cliente.bairro,
-      endereco: cliente.endereco,
-      pagamento: pagamentoId
-    });
+    // Dados do cliente para a próxima vez: só se ele escolheu guardá-los
+    var lembrar = document.getElementById("lembrar-dados");
+    if (lembrar && lembrar.checked) {
+      guardarJson("rjs_cliente", {
+        nome: cliente.nome,
+        telefone: valor("telefone"),
+        telefone2: valor("telefone2"),
+        provincia: cliente.provincia,
+        cidade: cliente.cidade,
+        bairro: cliente.bairro,
+        endereco: cliente.endereco,
+        pagamento: pagamentoId
+      });
+    } else {
+      try { localStorage.removeItem("rjs_cliente"); } catch (err) { /* ignora */ }
+    }
 
     var mensagem = mensagemWhatsapp(encomenda, linhas);
     removerCupao();
@@ -576,6 +607,7 @@
       rascunho[id] = valor(id);
     });
     rascunho.pagamento = (document.querySelector('input[name="pagamento"]:checked') || {}).value;
+    rascunho.lembrar = !!(document.getElementById("lembrar-dados") || {}).checked;
     desenharFormulario();
     var campo = document.getElementById("codigo-desconto");
     if (campo && textoEscrito) campo.value = textoEscrito;

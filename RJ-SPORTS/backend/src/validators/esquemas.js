@@ -57,7 +57,7 @@ const conta = z.object({
 
 const palavraPasse = z.object({
   atual: z.string().min(1).max(200),
-  nova: z.string().min(8, "Mínimo 8 caracteres.").max(200)
+  nova: z.string().min(12, "A palavra-passe nova precisa de pelo menos 12 caracteres.").max(200)
 });
 
 /* ---------- Painel ---------- */

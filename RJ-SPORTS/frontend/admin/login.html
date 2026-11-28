@@ -20,7 +20,7 @@
 <body>
   <main class="pagina-login">
     <div class="login__lado" aria-hidden="true">
-      <img src="../assets/images/banners/ajuda.jpg" alt="" onerror="this.remove()">
+      <img src="../assets/images/banners/ajuda.jpg" alt="" data-falha="remover">
       <div class="login__lado-texto">
         <h2>Painel RJ Sports</h2>
         <p>Gira produtos, encomendas, entregas e finanças da loja num só lugar.</p>
@@ -34,6 +34,8 @@
         <p>Acesso reservado à equipa da RJ Sports.</p>
 
         <form id="form-login" novalidate>
+          <div class="campo-armadilha" aria-hidden="true"><label for="website">Website</label>
+            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></div>
           <div class="campo">
             <label for="email">Email</label>
             <input type="email" id="email" name="email" autocomplete="username" required>

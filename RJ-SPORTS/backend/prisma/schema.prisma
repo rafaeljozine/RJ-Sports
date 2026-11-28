@@ -27,6 +27,8 @@ model Admin {
   hash      String
   inicial   Boolean  @default(true) // ainda com a palavra-passe de origem
   criadoEm  DateTime @default(now())
+  // sessões criadas antes desta data deixam de valer (ex.: ao mudar a palavra-passe)
+  sessoesDesde DateTime @default(dbgenerated("(now() AT TIME ZONE 'UTC'::text)"))
 }
 
 model Categoria {

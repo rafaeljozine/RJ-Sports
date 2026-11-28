@@ -57,7 +57,7 @@
     '<form class="form-admin" id="form-senha" novalidate style="padding-top:20px;border-top:1px solid var(--admin-borda)">' +
     '<h3 style="font-family:var(--fonte-corpo);font-size:.9375rem;text-transform:none;letter-spacing:0;margin:0">Alterar palavra-passe</h3><div class="grelha-campos grelha-campos--3">' +
     campo("atual", "Palavra-passe atual", "", { tipo: "password", auto: "current-password", erro: "Palavra-passe incorreta." }) +
-    campo("nova", "Nova palavra-passe", "", { tipo: "password", auto: "new-password", erro: "Mínimo 8 caracteres." }) +
+    campo("nova", "Nova palavra-passe", "", { tipo: "password", auto: "new-password", erro: "Mínimo 12 caracteres." }) +
     campo("confirmar", "Repetir nova", "", { tipo: "password", auto: "new-password", erro: "As palavras-passe não coincidem." }) +
     '</div><div><button type="submit" class="btn-adm btn-adm--primario">Alterar palavra-passe</button></div></form>' +
     "</div></section>" +
@@ -146,7 +146,7 @@
   document.getElementById("form-senha").addEventListener("submit", function (ev) {
     ev.preventDefault();
     var f = ev.target;
-    var ok = marcar(f, "nova", f.nova.value.length >= 8);
+    var ok = marcar(f, "nova", f.nova.value.length >= 12);
     ok = marcar(f, "confirmar", f.nova.value === f.confirmar.value) && ok;
     if (!ok) return;
     RJSA.auth.alterarPalavraPasse(f.atual.value, f.nova.value).then(function (certo) {

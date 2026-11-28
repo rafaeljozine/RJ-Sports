@@ -179,7 +179,7 @@
       pagina: "encomendas",
       titulo: "Encomenda " + (numero || ""),
       acoes: '<a class="btn-adm" href="encomendas.html">' + ic.voltar + " Encomendas</a>" +
-        '<button class="btn-adm" onclick="window.print()">' + ic.imprimir + " Imprimir</button>"
+        '<button class="btn-adm" data-acao="imprimir">' + ic.imprimir + " Imprimir</button>"
     });
     if (!conteudo) return;
     var db = RJSA.db.obter();

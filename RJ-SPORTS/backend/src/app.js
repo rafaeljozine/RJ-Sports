@@ -26,8 +26,10 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrcAttr: ["'unsafe-inline'"], // onerror das imagens e botão de imprimir
+      // só scripts dos próprios ficheiros do site: nada embutido no HTML
+      // (bloqueia a maior parte dos ataques XSS mesmo que algo escape)
+      scriptSrc: ["'self'"],
+      scriptSrcAttr: ["'none'"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "blob:", "https:"],
@@ -41,8 +43,14 @@ app.use(helmet({
   },
   crossOriginEmbedderPolicy: false,
   // HSTS só em produção (em localhost não faz sentido)
-  strictTransportSecurity: env.producao ? { maxAge: 15552000, includeSubDomains: true } : false
+  strictTransportSecurity: env.producao ? { maxAge: 63072000, includeSubDomains: true } : false,
+  frameguard: { action: "deny" }
 }));
+// funcionalidades do navegador que a loja nunca usa ficam desligadas
+app.use((req, res, next) => {
+  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()");
+  next();
+});
 
 /* ---------- Compressão e registo de pedidos ---------- */
 app.use(compression());

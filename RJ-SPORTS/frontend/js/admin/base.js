@@ -414,7 +414,7 @@ window.RJSA = window.RJSA || {};
   /** Miniatura de produto para tabelas */
   RJSA.miniatura = function (p) {
     return p && p.imagem
-      ? '<img src="' + e(RJSA.img(p.imagem)) + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">'
+      ? '<img src="' + e(RJSA.img(p.imagem)) + '" alt="" loading="lazy" data-falha="esconder">'
       : '<span class="produto-celula__marcador"></span>';
   };
 

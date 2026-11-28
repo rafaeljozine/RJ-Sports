@@ -38,6 +38,8 @@ Entre no painel com o `ADMIN_EMAIL` e a `ADMIN_PASSWORD` do `.env` e **mude a pa
 
 O site também abre só com os ficheiros (por exemplo, `python -m http.server` na pasta `frontend`). Nesse caso usa o catálogo de `frontend/js/produtos.js` e guarda tudo **só no navegador** — serve para ver o design, não para vender.
 
+Este modo de demonstração só existe em **localhost** (e endereços `.localhost` / `.test`). O painel entra sem palavra-passe, porque não há dados reais nem nenhuma palavra-passe no código do site. Num endereço público, se o servidor não responder, a loja avisa o cliente e o painel não abre: nunca há um "modo local" de recurso.
+
 ## Como funciona
 
 - **Catálogo** — a loja carrega `/api/catalogo.js` antes do resto; só vão para o site os produtos visíveis, sem custos nem fornecedores. No Vercel fica 1 minuto em cache na rede (renovado em segundo plano): uma alteração no painel aparece na loja em cerca de 1 minuto.
@@ -50,7 +52,38 @@ O site também abre só com os ficheiros (por exemplo, `python -m http.server` n
 
 ### Segurança incluída
 
-Cabeçalhos de segurança (Helmet, com Content-Security-Policy), limite de tentativas de login (10 / 15 min) e de encomendas (contadores guardados na base de dados, para funcionar também no Vercel), bloqueio de pedidos de outros sites, validação de todos os dados com Zod, e mensagens iguais para "email não existe" e "palavra-passe errada".
+**Nada de segurança fica no navegador.** Palavras-passe, sessões e regras vivem só no servidor. A sessão do painel é um cookie `httpOnly` (`__Host-`, `Secure`, `SameSite=Strict`) que o JavaScript não lê. O navegador guarda apenas o carrinho, o número das últimas encomendas (para "Acompanhar") e, **só se o cliente marcar a opção** no checkout, os seus dados de entrega.
+
+**Contra robôs**
+- **Prova anti-robô** nos formulários (login, encomenda, código de desconto, acompanhar). A página pede ao servidor uma prova assinada (HMAC) e envia-a no cabeçalho `X-RJS-Prova`. O servidor recusa os pedidos:
+  - sem prova ou com prova falsa;
+  - com mais de 2 horas;
+  - enviados depressa demais: menos de 3 s na encomenda, 1 s nos outros;
+  - com o **campo-armadilha** escondido preenchido.
+
+  Ver `backend/src/middlewares/protecaoMiddleware.js`.
+- **Limites de tentativas** (guardados na base de dados, partilhados pelas instâncias do Vercel):
+  - login: 10 por IP **e** 10 falhas por conta a cada 15 min. O bloqueio por conta trava ataques vindos de muitos IPs;
+  - encomendas: 10 por IP a cada 15 min **e** 5 por telefone por dia;
+  - códigos de desconto: 20, e acompanhar encomenda: 30, por IP a cada 15 min.
+
+**Painel**
+- Palavras-passe com bcrypt, com pelo menos 12 caracteres.
+- Mensagens iguais para "email não existe" e "palavra-passe errada".
+- Ao mudar a palavra-passe, **as sessões abertas noutros dispositivos terminam**.
+
+**Navegador**
+- Content-Security-Policy **sem scripts embutidos** (`script-src 'self'`, `script-src-attr 'none'`): não há código JavaScript dentro do HTML.
+- `X-Frame-Options: DENY`, HSTS e `Permissions-Policy` (câmara, microfone, localização e pagamentos desligados).
+- O painel fica com `noindex`.
+
+**Dados**
+- Validação de tudo com Zod.
+- Pedidos de outros sites bloqueados.
+- Preços e descontos sempre recalculados no servidor.
+- Fotos aceites só se o **conteúdo** for mesmo JPEG, PNG ou WebP.
+
+**No Vercel (recomendado, gratuito):** em **Firewall → Bot Management**, ligue *Bot Protection* e *AI Bots → Block*. Se a loja for atacada, ligue temporariamente o *Attack Challenge Mode*.
 
 ## API
 

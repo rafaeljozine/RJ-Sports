@@ -147,7 +147,7 @@ RJS.textoArtigos = function (linhas) {
         '  <div class="item-carrinho__produto">' +
         '    <a class="item-carrinho__media" href="' + url + '">' +
         '      <span class="cartao-produto__marcador" aria-hidden="true">' + e(RJS.iniciais(p.nome)) + "</span>" +
-        '      <img' + RJS.atributosImagem(p.imagem, "120px") + ' alt="" loading="lazy" decoding="async" onerror="this.remove()">' +
+        '      <img' + RJS.atributosImagem(p.imagem, "120px") + ' alt="" loading="lazy" decoding="async" data-falha="remover">' +
         "    </a>" +
         "    <div>" +
         '      <a class="item-carrinho__nome" href="' + url + '">' + e(p.nome) + "</a>" +

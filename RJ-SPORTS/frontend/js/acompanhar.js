@@ -53,11 +53,14 @@
   /** Procura a encomenda: no servidor (estado real) ou, sem servidor, neste navegador */
   function procurarEncomenda(numero, telefone) {
     if (RJS.modoApi) {
-      return RJS.api("/encomendas/" + encodeURIComponent(numero) + "?telefone=" + encodeURIComponent(telefone))
+      return RJS.api("/encomendas/" + encodeURIComponent(numero) + "?telefone=" + encodeURIComponent(telefone), { protegido: true })
         .catch(function (erro) {
           if (erro.estado === 404) return null;
           throw erro;
         });
+    }
+    if (!RJS.modoDemo) {
+      return Promise.reject(new Error("Não foi possível ligar à loja. Tente novamente daqui a pouco."));
     }
     return Promise.resolve(lerEncomendas().filter(function (enc) {
       return enc.numero === numero && normalizarTelefone(enc.cliente && enc.cliente.telefone) === telefone;
@@ -213,6 +216,7 @@
   /* ---------- Arranque ---------- */
   desenharInicial();
   desenharRecentes("");
+  RJS.prepararProtecao();
 
   // Vindo da confirmação (acompanhar.html?n=RJS-123456): preenche e mostra se for deste dispositivo
   var numeroUrl = normalizarNumero(new URLSearchParams(location.search).get("n"));

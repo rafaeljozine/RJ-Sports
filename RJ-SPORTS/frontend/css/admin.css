@@ -1317,6 +1317,16 @@ body.admin {
   gap: 16px;
 }
 
+.login__nota {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #eef2ff;
+  color: #1e3a8a;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
 .login__erro {
   padding: 10px 12px;
   border-radius: 6px;
@@ -1477,4 +1487,14 @@ body.admin {
   .ferramentas__direita {
     margin-left: 0;
   }
+}
+
+/* Campo-armadilha contra robôs: fora do ecrã (não "display:none",
+   que alguns robôs detetam), fora da ordem do Tab e escondido dos leitores de ecrã */
+.campo-armadilha {
+  position: absolute !important;
+  left: -10000px !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }

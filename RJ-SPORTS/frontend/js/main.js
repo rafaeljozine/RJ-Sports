@@ -48,7 +48,7 @@
       '  <div class="cartao-produto__media">' +
       '    <span class="cartao-produto__marcador" aria-hidden="true">' + e(RJS.iniciais(p.nome)) + "</span>" +
       '    <img' + RJS.atributosImagem(p.imagem, "(max-width: 600px) 50vw, (max-width: 1024px) 33vw, 25vw") +
-      ' alt="' + e(p.nome) + '" loading="lazy" decoding="async" onerror="this.remove()">' +
+      ' alt="' + e(p.nome) + '" loading="lazy" decoding="async" data-falha="remover">' +
       '    <div class="cartao-produto__etiquetas">' + etiquetas + "</div>" +
       botao +
       "  </div>" +
